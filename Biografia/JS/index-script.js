@@ -44,15 +44,14 @@ document.addEventListener("click", () => {
 });
 
 /* ---------------------------------------------------
-   Sistema di traduzione: una sola pagina, testi caricati
-   dai file JSON in /languages per lingua.
+   Sistema di traduzione: una sola pagina, testi presi
+   dall'oggetto TRANSLATIONS (JS/translations.js).
+   Niente fetch: funziona anche aprendo il file in locale.
 --------------------------------------------------- */
 
 const SUPPORTED_LANGS = ["it", "en", "es"];
 const DEFAULT_LANG = "it";
 const LANG_STORAGE_KEY = "site-lang";
-
-const translationCache = {};
 
 function detectInitialLang() {
     try {
@@ -62,27 +61,24 @@ function detectInitialLang() {
         /* localStorage non disponibile: si ignora e si usa il default */
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const fromQuery = params.get("lang");
-    if (fromQuery && SUPPORTED_LANGS.includes(fromQuery)) return fromQuery;
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const fromQuery = params.get("lang");
+        if (fromQuery && SUPPORTED_LANGS.includes(fromQuery)) return fromQuery;
+    } catch (err) {
+        /* URL non leggibile: si ignora */
+    }
 
     return DEFAULT_LANG;
 }
 
-async function fetchTranslations(lang) {
-    if (translationCache[lang]) return translationCache[lang];
+function applyTranslations(lang) {
+    if (!SUPPORTED_LANGS.includes(lang)) lang = DEFAULT_LANG;
+    const dict = TRANSLATIONS[lang];
+    if (!dict) return;
 
-    const response = await fetch(`languages/${lang}.json`);
-    if (!response.ok) {
-        throw new Error(`Impossibile caricare la traduzione per "${lang}"`);
-    }
-    const data = await response.json();
-    translationCache[lang] = data;
-    return data;
-}
-
-function applyTranslations(dict, lang) {
-    document.getElementById("html-root").setAttribute("lang", dict.htmlLang || lang);
+    const htmlRoot = document.getElementById("html-root");
+    if (htmlRoot) htmlRoot.setAttribute("lang", dict.htmlLang || lang);
 
     const metaDescription = document.getElementById("meta-description");
     if (metaDescription) metaDescription.setAttribute("content", dict.metaDescription);
@@ -109,32 +105,36 @@ function applyTranslations(dict, lang) {
     });
 }
 
-async function setLanguage(lang) {
+function setLanguage(lang) {
     if (!SUPPORTED_LANGS.includes(lang)) lang = DEFAULT_LANG;
 
+    applyTranslations(lang);
+
     try {
-        const dict = await fetchTranslations(lang);
-        applyTranslations(dict, lang);
+        localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch (err) {
+        /* localStorage non disponibile: la scelta semplicemente non persiste */
+    }
 
-        try {
-            localStorage.setItem(LANG_STORAGE_KEY, lang);
-        } catch (err) {
-            /* localStorage non disponibile: la scelta semplicemente non persiste */
-        }
-
+    try {
         const url = new URL(window.location.href);
         url.searchParams.set("lang", lang);
         window.history.replaceState({}, "", url);
     } catch (err) {
-        console.error(err);
+        /* URL non aggiornabile (es. protocollo file://): non è bloccante */
     }
 }
 
 document.querySelectorAll(".lang-option").forEach((a) => {
     a.addEventListener("click", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const lang = a.getAttribute("data-lang");
         setLanguage(lang);
+        if (langDropdown && langChevron) {
+            langDropdown.classList.remove("active");
+            langChevron.classList.remove("open");
+        }
     });
 });
 
