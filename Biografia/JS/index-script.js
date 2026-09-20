@@ -44,6 +44,49 @@ document.addEventListener("click", () => {
 });
 
 /* ---------------------------------------------------
+   Integrazione con la Home
+   La bio viene aperta dentro la Home (in un iframe) con
+   l'animazione "stile macOS". Il pulsante rosso avvisa la
+   Home con un postMessage, che esegue l'animazione di
+   chiusura. Se la bio è aperta da sola (non in un iframe),
+   il pulsante rosso porta semplicemente alla Home.
+--------------------------------------------------- */
+
+/* In produzione metti qui l'indirizzo della Home (es. "https://mathiasggxmitic.it") */
+const HOME_URL = "../Home/index.html";
+
+/* Origine della Home a cui inviare i messaggi. "*" funziona sempre e i messaggi
+   non contengono dati sensibili; volendo si può restringere all'origine della Home. */
+const HOME_ORIGIN = "*";
+
+const isEmbedded = window.parent !== window;
+
+function notifyHome(message) {
+    if (!isEmbedded) return;
+    try {
+        window.parent.postMessage(message, HOME_ORIGIN);
+    } catch (err) {
+        /* la Home non è raggiungibile: non è bloccante */
+    }
+}
+
+function closeApp() {
+    if (isEmbedded) {
+        notifyHome({ type: "app:close" });
+    } else {
+        window.location.href = HOME_URL;
+    }
+}
+
+const panelClose = document.getElementById("panel-close");
+if (panelClose) panelClose.addEventListener("click", closeApp);
+
+/* Esc chiude la finestra, ma solo quando la bio è dentro la Home */
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isEmbedded) closeApp();
+});
+
+/* ---------------------------------------------------
    Sistema di traduzione: una sola pagina, testi presi
    dall'oggetto TRANSLATIONS (JS/translations.js).
    Niente fetch: funziona anche aprendo il file in locale.
@@ -54,19 +97,20 @@ const DEFAULT_LANG = "it";
 const LANG_STORAGE_KEY = "site-lang";
 
 function detectInitialLang() {
-    try {
-        const saved = localStorage.getItem(LANG_STORAGE_KEY);
-        if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
-    } catch (err) {
-        /* localStorage non disponibile: si ignora e si usa il default */
-    }
-
+    /* La lingua passata dalla Home (?lang=xx) ha la precedenza su quella salvata */
     try {
         const params = new URLSearchParams(window.location.search);
         const fromQuery = params.get("lang");
         if (fromQuery && SUPPORTED_LANGS.includes(fromQuery)) return fromQuery;
     } catch (err) {
         /* URL non leggibile: si ignora */
+    }
+
+    try {
+        const saved = localStorage.getItem(LANG_STORAGE_KEY);
+        if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
+    } catch (err) {
+        /* localStorage non disponibile: si ignora e si usa il default */
     }
 
     return DEFAULT_LANG;
@@ -131,6 +175,8 @@ document.querySelectorAll(".lang-option").forEach((a) => {
         e.stopPropagation();
         const lang = a.getAttribute("data-lang");
         setLanguage(lang);
+        /* tiene allineata la lingua della Home a quella scelta qui */
+        notifyHome({ type: "app:lang", lang });
         if (langDropdown && langChevron) {
             langDropdown.classList.remove("active");
             langChevron.classList.remove("open");
