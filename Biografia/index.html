@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" id="html-root">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Bio di MathiasGGxMitic">
+        <meta name="description" content="Bio di MathiasGGxMitic" id="meta-description">
         <title>MathiasGGxMitic BIO</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
     <body>
         <header class="navbar">
             <div class="navbar-bar">
-                <button class="menu-btn" id="menu-btn" aria-label="Apri menu di navigazione">
+                <button class="menu-btn" id="menu-btn" data-i18n-attr="aria-label:menuBtnAriaLabel" aria-label="Apri menu di navigazione">
                     <div class="menu-lines">
                         <span></span>
                         <span></span>
@@ -25,64 +25,64 @@
                     <i class="fa-solid fa-chevron-down" id="chevron"></i>
                 </button>
                 <nav class="desktop-nav">
-                    <a href="index.html"><i class="fa-solid fa-link"></i>Bio</a>
+                    <a href="#"><i class="fa-solid fa-link"></i><span data-i18n="navBio">Bio</span></a>
                     <div class="desktop-nav-divider"></div>
-                    <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i>In futuro...</span>
+                    <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i><span data-i18n="navComingSoon">In futuro...</span></span>
                 </nav>
 
                 <div class="lang-menu-wrapper">
-                    <button class="lang-btn" id="lang-btn" aria-label="Cambia lingua">
-                        <span class="lang-flag">🇮🇹</span>
-                        <span class="lang-text">IT</span>
+                    <button class="lang-btn" id="lang-btn" data-i18n-attr="aria-label:langBtnAriaLabel" aria-label="Cambia lingua">
+                        <span class="lang-flag" id="lang-flag-current">🇮🇹</span>
+                        <span class="lang-text" id="lang-code-current">IT</span>
                         <i class="fa-solid fa-chevron-down" id="lang-chevron"></i>
                     </button>
                 </div>
             </div>
 
             <div class="dropdown-menu" id="dropdown-menu">
-                <a href="index.html"><i class="fa-solid fa-link"></i>BIO</a>
+                <a href="#"><i class="fa-solid fa-link"></i><span data-i18n="menuBioLink">BIO</span></a>
                 <div class="menu-divider"></div>
-                <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i>IN FUTURO...</span>
+                <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i><span data-i18n="menuComingSoon">IN FUTURO...</span></span>
             </div>
 
             <div class="lang-dropdown" id="lang-dropdown">
-                <a href="index.html" class="active"><span class="lang-flag">🇮🇹</span> Italiano (IT)</a>
+                <a href="#" data-lang="it" class="lang-option"><span class="lang-flag">🇮🇹</span> <span data-i18n="langNameIt">Italiano (IT)</span></a>
                 <div class="menu-divider"></div>
-                <a href="index-en.html"><span class="lang-flag">🇬🇧</span> English (EN)</a>
+                <a href="#" data-lang="en" class="lang-option"><span class="lang-flag">🇬🇧</span> <span data-i18n="langNameEn">English (EN)</span></a>
                 <div class="menu-divider"></div>
-                <a href="index-es.html"><span class="lang-flag">🇪🇸</span> Español (ES)</a>
+                <a href="#" data-lang="es" class="lang-option"><span class="lang-flag">🇪🇸</span> <span data-i18n="langNameEs">Español (ES)</span></a>
             </div>
         </header>
         <main>
             <section class="panel">
                 <div class="panel-header">
                     <span class="panel-dots"><i></i><i></i><i></i></span>
-                    <span class="panel-title">Portfolio Personale</span>
+                    <span class="panel-title" data-i18n="panelTitle">Portfolio Personale</span>
                 </div>
                 <div class="panel-body">
                     <div class="avatar-wrap">
-                        <img class="pfp" src="foto_profilo.webp" alt="Foto profilo di MathiasGGxMitic">
+                        <img class="pfp" src="foto_profilo.webp" data-i18n-attr="alt:pfpAlt" alt="Foto profilo di MathiasGGxMitic">
                     </div>
 
                     <dl class="fields">
                         <div class="field">
-                            <dt>Nome</dt>
+                            <dt data-i18n="fieldName">Nome</dt>
                             <dd>Mathias Giuseppe Morrone</dd>
                         </div>
                         <div class="field">
-                            <dt>Nickname</dt>
+                            <dt data-i18n="fieldNickname">Nickname</dt>
                             <dd>@MathiasGGxMitic</dd>
                         </div>
                         <div class="field field-bio">
-                            <dt>Bio</dt>
-                            <dd>Sono uno studente italiano appassionato di tecnologia e sviluppo web frontend. Mi occupo principalmente di migliorare interfacce grafiche (UI) ed esperienza utente (UX), creando siti moderni, intuitivi e curati nei dettagli. Nel tempo libero assemblo PC ed eseguo manutenzione hardware, tra cui pulizia, upgrade, selezione dei componenti e manutenzione di computer desktop e portatili.</dd>
+                            <dt data-i18n="fieldBio">Bio</dt>
+                            <dd data-i18n="bioText">Sono uno studente italiano appassionato di tecnologia e sviluppo web frontend. Mi occupo principalmente di migliorare interfacce grafiche (UI) ed esperienza utente (UX), creando siti moderni, intuitivi e curati nei dettagli. Nel tempo libero assemblo PC ed eseguo manutenzione hardware, tra cui pulizia, upgrade, selezione dei componenti e manutenzione di computer desktop e portatili.</dd>
                         </div>
                     </dl>
 
                     <div class="divider"></div>
 
                     <div class="connect">
-                        <div class="connect-label">Link dei miei social</div>
+                        <div class="connect-label" data-i18n="connectLabel">Link dei miei social</div>
                         <a class="port port-tiktok" href="https://www.tiktok.com/@mathiasggxmitic" target="_blank">
                             <span class="port-icon"><i class="fa-brands fa-tiktok"></i></span>
                             <span class="port-name">TikTok</span>
@@ -103,7 +103,7 @@
             </section>
 
             <footer class="log-note">
-                <p><span class="log-tag">[INFO]</span>Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing.</p>
+                <p><span class="log-tag">[INFO]</span><span data-i18n="footerInfo">Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing.</span></p>
             </footer>
         </main>
         <script src="JS/index-script.js"></script>
