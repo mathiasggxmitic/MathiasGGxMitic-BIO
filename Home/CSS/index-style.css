@@ -1,0 +1,478 @@
+:root {
+    --bg: #0a0d10;
+    --panel: #12161b;
+    --panel-header: #171b21;
+    --panel-alt: #171c22;
+    --border: #262c34;
+    --border-soft: #1c2128;
+    --border-strong: #3a424c;
+    --text: #e7eaed;
+    --text-dim: #838d99;
+    --text-faint: #4c545e;
+    --accent: #ff9d42;
+    --accent-soft: rgba(255, 157, 66, 0.12);
+    --accent-alt: #7ec8ff;
+    --status-ok: #6fcf7c;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--bg);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--bg);
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+    padding: 108px 20px 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+}
+
+/* Mentre un'app è aperta la home resta sullo sfondo, leggermente indietro e più scura */
+body.app-open {
+    overflow: hidden;
+}
+
+body.app-open main {
+    transform: scale(0.97);
+    filter: brightness(0.55);
+}
+
+/* ---------- Navbar (stessa della bio) ---------- */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar-bar {
+    width: 100%;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10, 13, 16, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--text);
+}
+
+.brand-prefix {
+    color: var(--accent);
+    margin-right: 1px;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-dim);
+    background: var(--panel);
+    transition: border-color 0.2s ease, color 0.2s ease;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.lang-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.lang-flag {
+    font-size: 14px;
+    line-height: 1;
+    filter: grayscale(20%);
+}
+
+#lang-chevron {
+    transition: transform 0.25s ease;
+    font-size: 9px;
+}
+
+#lang-chevron.open {
+    transform: rotate(180deg);
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 24px;
+    width: 210px;
+    border-radius: 4px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.lang-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-dropdown a {
+    padding: 14px 16px;
+    text-decoration: none;
+    color: var(--text);
+    background: transparent;
+    border-left: 2px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.lang-dropdown a:hover {
+    background: var(--panel-alt);
+    border-left-color: var(--accent);
+}
+
+.lang-dropdown a.active {
+    background: var(--panel-alt);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--border);
+}
+
+/* ---------- Pannello (stesso della bio) ---------- */
+
+.panel {
+    width: 100%;
+    max-width: 620px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px;
+    min-height: 34px;
+    background: var(--panel-header);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.panel-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--accent-alt);
+    text-transform: uppercase;
+}
+
+.panel-body {
+    padding: 30px 26px 30px 26px;
+}
+
+.launcher-label {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--status-ok);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+/* ---------- Launcher: le "app" ---------- */
+
+.launcher {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    align-items: start;
+}
+
+.app-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 4px 10px 4px;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app-tile:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.app-icon {
+    --icon-size: 76px;
+    display: grid;
+    place-items: center;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    font-size: 30px;
+    color: var(--accent);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.app-icon-projects {
+    color: var(--accent-alt);
+}
+
+.app-icon-soon {
+    color: var(--text-faint);
+    background: transparent;
+    border-style: dashed;
+}
+
+.app-tile:hover .app-icon,
+.app-tile:focus-visible .app-icon {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-3px);
+}
+
+.app-tile:hover .app-icon-soon,
+.app-tile:focus-visible .app-icon-soon {
+    background: transparent;
+    border-color: var(--border-strong);
+    transform: none;
+}
+
+.app-tile:active .app-icon {
+    transform: scale(0.94);
+}
+
+.app-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--text);
+    transition: color 0.2s ease;
+}
+
+.app-label-dim {
+    color: var(--text-faint);
+}
+
+.app-tile:hover .app-label:not(.app-label-dim) {
+    color: var(--accent);
+}
+
+.app-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: -6px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.dot-idle {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-faint);
+    flex-shrink: 0;
+}
+
+/* ---------- Finestra dell'app (animazione stile macOS) ---------- */
+
+.app-window {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.app-window[hidden] {
+    display: none;
+}
+
+.app-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: var(--bg);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+}
+
+.app-frame.is-visible {
+    opacity: 1;
+}
+
+/* l'icona dell'app che "diventa" la finestra: sta al centro mentre la bio carica */
+.app-splash {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.app-splash.is-hidden {
+    opacity: 0;
+}
+
+.app-splash .app-icon {
+    transition: none;
+    transform: none;
+}
+
+/* ---------- Note in fondo ---------- */
+
+.log-note {
+    width: 100%;
+    max-width: 620px;
+    margin-top: 22px;
+    padding: 0 6px;
+}
+
+.log-note p {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--text-faint);
+}
+
+.log-tag {
+    color: var(--accent);
+    margin-right: 6px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 520px) {
+    main {
+        padding: 92px 14px 32px 14px;
+    }
+
+    .panel-body {
+        padding: 24px 12px 20px 12px;
+    }
+
+    .navbar-bar {
+        padding: 12px 16px;
+    }
+
+    .lang-dropdown {
+        width: calc(100vw - 48px);
+        right: 16px;
+    }
+
+    .launcher {
+        gap: 4px;
+    }
+
+    .app-icon {
+        --icon-size: 62px;
+        font-size: 25px;
+        border-radius: 15px;
+    }
+
+    .app-label {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .app-status {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    main,
+    .app-icon,
+    .app-frame,
+    .app-splash {
+        transition-duration: 0.01ms;
+    }
+}
