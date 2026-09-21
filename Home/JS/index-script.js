@@ -7,41 +7,25 @@ const APPS = {
     }
 };
 
+const BIO_URL = APPS.bio.url;
+const HOME_URL = "https://mathiasggxmitic.it/";
+const TRANSITION_PARAM = "transition";
+
 const langBtn = document.getElementById("lang-btn");
 const langDropdown = document.getElementById("lang-dropdown");
 const langChevron = document.getElementById("lang-chevron");
-
-const pageNavbar = document.getElementById("home-navbar");
+const transition = document.getElementById("page-transition");
+const transitionIcon = document.getElementById("transition-icon");
 const pageMain = document.getElementById("home-main");
-
-const appWindow = document.getElementById("app-window");
-const appFrame = document.getElementById("app-frame");
-const appSplash = document.getElementById("app-splash");
-
+const pageNavbar = document.getElementById("home-navbar");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-if (langBtn && langDropdown && langChevron) {
-    langBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-
-        const isOpen = langDropdown.classList.toggle("active");
-
-        langChevron.classList.toggle("open", isOpen);
-    });
-}
-
-document.addEventListener("click", () => {
-    if (langDropdown && langChevron) {
-        langDropdown.classList.remove("active");
-        langChevron.classList.remove("open");
-    }
-});
 
 const SUPPORTED_LANGS = ["it", "en", "es"];
 const DEFAULT_LANG = "it";
 const LANG_STORAGE_KEY = "site-lang";
 
 let currentLang = DEFAULT_LANG;
+let navigationBusy = false;
 
 function detectInitialLang() {
     try {
@@ -51,8 +35,7 @@ function detectInitialLang() {
         if (fromQuery && SUPPORTED_LANGS.includes(fromQuery)) {
             return fromQuery;
         }
-    } catch (err) {
-    }
+    } catch {}
 
     try {
         const saved = localStorage.getItem(LANG_STORAGE_KEY);
@@ -60,8 +43,7 @@ function detectInitialLang() {
         if (saved && SUPPORTED_LANGS.includes(saved)) {
             return saved;
         }
-    } catch (err) {
-    }
+    } catch {}
 
     return DEFAULT_LANG;
 }
@@ -74,15 +56,24 @@ function applyTranslations(lang) {
     }
 
     const htmlRoot = document.getElementById("html-root");
+    const metaDescription = document.getElementById("meta-description");
+    const flagEl = document.getElementById("lang-flag-current");
+    const codeEl = document.getElementById("lang-code-current");
 
     if (htmlRoot) {
         htmlRoot.setAttribute("lang", dict.htmlLang || lang);
     }
 
-    const metaDescription = document.getElementById("meta-description");
-
     if (metaDescription) {
         metaDescription.setAttribute("content", dict.metaDescription);
+    }
+
+    if (flagEl) {
+        flagEl.textContent = dict.langFlag;
+    }
+
+    if (codeEl) {
+        codeEl.textContent = dict.langCode;
     }
 
     document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -95,7 +86,7 @@ function applyTranslations(lang) {
 
     document.querySelectorAll("[data-i18n-attr]").forEach((el) => {
         el.getAttribute("data-i18n-attr").split(",").forEach((pair) => {
-            const [attr, key] = pair.split(":").map((s) => s.trim());
+            const [attr, key] = pair.split(":").map((value) => value.trim());
 
             if (attr && dict[key] !== undefined) {
                 el.setAttribute(attr, dict[key]);
@@ -103,457 +94,267 @@ function applyTranslations(lang) {
         });
     });
 
-    const flagEl = document.getElementById("lang-flag-current");
-    const codeEl = document.getElementById("lang-code-current");
-
-    if (flagEl) {
-        flagEl.textContent = dict.langFlag;
-    }
-
-    if (codeEl) {
-        codeEl.textContent = dict.langCode;
-    }
-
-    document.querySelectorAll(".lang-option").forEach((a) => {
-        a.classList.toggle(
+    document.querySelectorAll(".lang-option").forEach((option) => {
+        option.classList.toggle(
             "active",
-            a.getAttribute("data-lang") === lang
+            option.getAttribute("data-lang") === lang
         );
     });
 }
 
-function setLanguage(lang, fromApp = false) {
+function setLanguage(lang) {
     if (!SUPPORTED_LANGS.includes(lang)) {
         lang = DEFAULT_LANG;
     }
 
     currentLang = lang;
-
     applyTranslations(lang);
 
     try {
         localStorage.setItem(LANG_STORAGE_KEY, lang);
-    } catch (err) {
-    }
+    } catch {}
 
     try {
         const url = new URL(window.location.href);
-
         url.searchParams.set("lang", lang);
-
         window.history.replaceState({}, "", url);
-    } catch (err) {
-    }
-
-    if (frameApp && APPS[frameApp]) {
-        if (fromApp) {
-            appFrame.dataset.url = frameUrl(APPS[frameApp]);
-        } else if (!activeKey) {
-            loadFrame(APPS[frameApp]);
-        }
-    }
+    } catch {}
 }
 
-document.querySelectorAll(".lang-option").forEach((a) => {
-    a.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        setLanguage(a.getAttribute("data-lang"));
-
-        langDropdown.classList.remove("active");
-        langChevron.classList.remove("open");
-    });
-});
-
-let frameApp = null;
-let frameReady = Promise.resolve();
-
-function frameUrl(app) {
-    const url = new URL(app.url, window.location.href);
-
-    url.searchParams.set("lang", currentLang);
-
-    return url.href;
-}
-
-function loadFrame(app) {
-    const url = frameUrl(app);
-
-    if (appFrame.dataset.url === url) {
-        return frameReady;
-    }
-
-    appFrame.dataset.url = url;
-
-    frameReady = new Promise((resolve) => {
-        appFrame.onload = () => resolve();
-    });
-
-    appFrame.src = url;
-
-    return frameReady;
-}
-
-function warmUp(key) {
-    const app = APPS[key];
-
-    if (!app || !app.url || frameApp) {
+function closeLanguageMenu() {
+    if (!langDropdown || !langChevron) {
         return;
     }
 
-    frameApp = key;
-
-    loadFrame(app);
+    langDropdown.classList.remove("active");
+    langChevron.classList.remove("open");
 }
 
-const OPEN_MS = 560;
-const CLOSE_MS = 380;
-const OPEN_EASE = "cubic-bezier(0.32, 0.72, 0, 1)";
-const CLOSE_EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
-const FRAME_TIMEOUT_MS = 4000;
+if (langBtn && langDropdown && langChevron) {
+    langBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
 
-let activeKey = null;
-let activeTile = null;
-let busy = false;
+        const isOpen = langDropdown.classList.toggle("active");
 
-const wait = (ms) => new Promise((resolve) => {
-    setTimeout(resolve, ms);
+        langChevron.classList.toggle("open", isOpen);
+    });
+}
+
+document.addEventListener("click", closeLanguageMenu);
+
+document.querySelectorAll(".lang-option").forEach((option) => {
+    option.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        setLanguage(option.getAttribute("data-lang"));
+        closeLanguageMenu();
+    });
 });
 
-function setPageInert(on) {
-    pageNavbar.inert = on;
-    pageMain.inert = on;
+function getTransitionState() {
+    try {
+        return new URL(window.location.href).searchParams.get(TRANSITION_PARAM);
+    } catch {
+        return null;
+    }
 }
 
-function buildSplash(iconEl) {
-    const clone = iconEl.cloneNode(true);
+function clearTransitionState() {
+    try {
+        const url = new URL(window.location.href);
 
-    appSplash.replaceChildren(clone);
+        url.searchParams.delete(TRANSITION_PARAM);
 
-    appSplash.style.marginLeft = -(iconEl.offsetWidth / 2) + "px";
-    appSplash.style.marginTop = -(iconEl.offsetHeight / 2) + "px";
+        window.history.replaceState({}, "", url);
+    } catch {}
 }
 
-function measureIcon(iconEl) {
-    const rect = iconEl.getBoundingClientRect();
-    const mainRect = pageMain.getBoundingClientRect();
-
-    const scale =
-        new DOMMatrixReadOnly(
-            getComputedStyle(pageMain).transform
-        ).a || 1;
-
-    const originX = mainRect.left + mainRect.width / 2;
-    const originY = mainRect.top + mainRect.height / 2;
+function getIconRect(icon) {
+    const rect = icon.getBoundingClientRect();
 
     return {
-        cx:
-            originX +
-            (rect.left + rect.width / 2 - originX) /
-            scale,
-
-        cy:
-            originY +
-            (rect.top + rect.height / 2 - originY) /
-            scale,
-
-        w: iconEl.offsetWidth,
-        h: iconEl.offsetHeight,
-
-        radius:
-            parseFloat(
-                getComputedStyle(iconEl).borderTopLeftRadius
-            ) || 16
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        radius: parseFloat(
+            getComputedStyle(icon).borderTopLeftRadius
+        ) || 16
     };
 }
 
-function playWindow(opening, iconEl) {
-    if (reduceMotion.matches) {
-        const fade = appWindow.animate(
-            [
-                {
-                    opacity: opening ? 0 : 1
-                },
-                {
-                    opacity: opening ? 1 : 0
-                }
-            ],
-            {
-                duration: 150,
-                fill: "both"
-            }
-        );
+function getTransitionClip(rect) {
+    const right =
+        window.innerWidth -
+        rect.left -
+        rect.width;
 
-        return Promise.resolve([fade]);
-    }
+    const bottom =
+        window.innerHeight -
+        rect.top -
+        rect.height;
 
-    const vw = appWindow.clientWidth;
-    const vh = appWindow.clientHeight;
-    const m = measureIcon(iconEl);
-
-    const left = m.cx - m.w / 2;
-    const top = m.cy - m.h / 2;
-
-    const small =
-        `inset(${top}px ${vw - left - m.w}px ` +
-        `${vh - top - m.h}px ${left}px round ${m.radius}px)`;
-
-    const full = "inset(0px 0px 0px 0px round 0px)";
-
-    const away =
-        `translate(${m.cx - vw / 2}px, ${m.cy - vh / 2}px)`;
-
-    const center = "translate(0px, 0px)";
-
-    const timing = {
-        duration: opening ? OPEN_MS : CLOSE_MS,
-        easing: opening ? OPEN_EASE : CLOSE_EASE,
-        fill: "both"
-    };
-
-    const windowAnim = appWindow.animate(
-        opening
-            ? [
-                {
-                    clipPath: small
-                },
-                {
-                    clipPath: full
-                }
-            ]
-            : [
-                {
-                    clipPath: full
-                },
-                {
-                    clipPath: small
-                }
-            ],
-        timing
-    );
-
-    const splashAnim = appSplash.animate(
-        opening
-            ? [
-                {
-                    transform: away
-                },
-                {
-                    transform: center
-                }
-            ]
-            : [
-                {
-                    transform: center
-                },
-                {
-                    transform: away
-                }
-            ],
-        timing
-    );
-
-    return Promise.all([
-        windowAnim.finished,
-        splashAnim.finished
-    ]).then(() => [
-        windowAnim,
-        splashAnim
-    ]);
+    return `inset(${rect.top}px ${right}px ${bottom}px ${rect.left}px round ${rect.radius}px)`;
 }
 
-function shake(tile) {
-    if (reduceMotion.matches) {
+function createTransitionIcon(icon) {
+    transitionIcon.replaceChildren(icon.cloneNode(true));
+
+    transitionIcon.style.width = `${icon.offsetWidth}px`;
+    transitionIcon.style.height = `${icon.offsetHeight}px`;
+}
+
+async function navigateToBio(tile) {
+    if (navigationBusy) {
         return;
     }
 
     const icon = tile.querySelector(".app-icon");
 
-    icon.animate(
+    if (!icon) {
+        return;
+    }
+
+    navigationBusy = true;
+
+    closeLanguageMenu();
+
+    const rect = getIconRect(icon);
+
+    createTransitionIcon(icon);
+
+    const target = new URL(BIO_URL);
+
+    target.searchParams.set("lang", currentLang);
+    target.searchParams.set(
+        TRANSITION_PARAM,
+        "home-to-bio"
+    );
+
+    if (reduceMotion.matches) {
+        window.location.assign(target.href);
+        return;
+    }
+
+    transition.hidden = false;
+    transition.classList.add("is-active");
+    transition.style.clipPath = getTransitionClip(rect);
+
+    pageMain.classList.add("is-transitioning");
+    pageNavbar.classList.add("is-transitioning");
+
+    await transition.animate(
         [
             {
-                transform: "translateX(0)"
+                clipPath: getTransitionClip(rect)
             },
             {
-                transform: "translateX(-7px)"
-            },
-            {
-                transform: "translateX(7px)"
-            },
-            {
-                transform: "translateX(-5px)"
-            },
-            {
-                transform: "translateX(5px)"
-            },
-            {
-                transform: "translateX(0)"
+                clipPath: "inset(0 0 0 0 round 0px)"
             }
         ],
         {
-            duration: 380,
-            easing: "ease-in-out"
+            duration: 560,
+            easing: "cubic-bezier(0.32, 0.72, 0, 1)",
+            fill: "forwards"
         }
-    );
-}
+    ).finished;
 
-async function openApp(key, tile) {
-    if (busy || activeKey) {
-        return;
-    }
-
-    const app = APPS[key];
-
-    if (!app || !app.url) {
-        shake(tile);
-        return;
-    }
-
-    busy = true;
-    activeKey = key;
-    activeTile = tile;
-    frameApp = key;
-
-    const ready = loadFrame(app);
-
-    appFrame.title =
-        tile.querySelector(".app-label").textContent;
-
-    const iconEl = tile.querySelector(".app-icon");
-
-    buildSplash(iconEl);
-
-    appSplash.classList.remove("is-hidden");
-    appFrame.classList.remove("is-visible");
-
-    appWindow.hidden = false;
-
-    const animation = playWindow(true, iconEl);
-
-    document.body.classList.add("app-open");
-    setPageInert(true);
-
-    const anims = await animation;
-
-    anims.forEach((a) => a.cancel());
-
-    await Promise.race([
-        ready,
-        wait(FRAME_TIMEOUT_MS)
-    ]);
-
-    appFrame.classList.add("is-visible");
-    appSplash.classList.add("is-hidden");
-
-    try {
-        appFrame.contentWindow.focus();
-    } catch (err) {
-    }
-
-    busy = false;
-}
-
-async function closeApp() {
-    if (!activeKey || busy) {
-        return;
-    }
-
-    busy = true;
-
-    const tile = activeTile;
-    const iconEl = tile.querySelector(".app-icon");
-
-    appSplash.classList.remove("is-hidden");
-
-    appFrame.style.transitionDuration = "0.12s";
-    appFrame.classList.remove("is-visible");
-
-    if (!reduceMotion.matches) {
-        await wait(130);
-    }
-
-    const animation = playWindow(false, iconEl);
-
-    document.body.classList.remove("app-open");
-
-    const anims = await animation;
-
-    appWindow.hidden = true;
-
-    anims.forEach((a) => a.cancel());
-
-    appFrame.style.transitionDuration = "";
-
-    setPageInert(false);
-
-    tile.focus({
-        preventScroll: true
-    });
-
-    activeKey = null;
-    activeTile = null;
-    busy = false;
+    window.location.assign(target.href);
 }
 
 document.querySelectorAll(".app-tile").forEach((tile) => {
     tile.addEventListener("click", () => {
-        openApp(
-            tile.getAttribute("data-app"),
-            tile
-        );
+        const app = tile.getAttribute("data-app");
+
+        if (app === "bio") {
+            navigateToBio(tile);
+            return;
+        }
+
+        if (app === "projects") {
+            if (APPS.projects.url) {
+                window.location.assign(APPS.projects.url);
+            }
+
+            return;
+        }
+
+        const icon = tile.querySelector(".app-icon");
+
+        if (icon) {
+            icon.animate(
+                [
+                    {
+                        transform: "translateX(0)"
+                    },
+                    {
+                        transform: "translateX(-6px)"
+                    },
+                    {
+                        transform: "translateX(6px)"
+                    },
+                    {
+                        transform: "translateX(-4px)"
+                    },
+                    {
+                        transform: "translateX(4px)"
+                    },
+                    {
+                        transform: "translateX(0)"
+                    }
+                ],
+                {
+                    duration: 360,
+                    easing: "ease-in-out"
+                }
+            );
+        }
     });
 });
 
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && activeKey) {
-        closeApp();
-    }
-});
+function finishReturnTransition() {
+    const state = getTransitionState();
 
-window.addEventListener("message", (event) => {
-    if (event.source !== appFrame.contentWindow) {
+    if (state !== "bio-to-home") {
         return;
     }
 
-    const trustedBioOrigins = [
-        "https://bio.mathiasggxmitic.it",
-        "http://localhost",
-        "http://127.0.0.1",
-        "null"
-    ];
+    clearTransitionState();
 
-    const isTrustedOrigin =
-        trustedBioOrigins.includes(event.origin) ||
-        (
-            window.location.protocol === "file:" &&
-            event.origin === "null"
-        );
-
-    if (!isTrustedOrigin) {
+    if (!transition || !transitionIcon) {
         return;
     }
 
-    const data = event.data;
+    transition.hidden = false;
+    transition.classList.add("is-active");
+    transition.style.clipPath =
+        "inset(0 0 0 0 round 0px)";
 
-    if (!data || typeof data !== "object") {
-        return;
-    }
+    transitionIcon.classList.add("is-hidden");
 
-    if (data.type === "app:close") {
-        closeApp();
-    } else if (
-        data.type === "app:lang" &&
-        SUPPORTED_LANGS.includes(data.lang)
-    ) {
-        setLanguage(data.lang, true);
-    }
-});
+    requestAnimationFrame(() => {
+        transition.animate(
+            [
+                {
+                    opacity: 1
+                },
+                {
+                    opacity: 0
+                }
+            ],
+            {
+                duration: 220,
+                easing: "ease-out",
+                fill: "forwards"
+            }
+        ).finished.then(() => {
+            transition.hidden = true;
+            transition.classList.remove("is-active");
+            transitionIcon.classList.remove("is-hidden");
+        });
+    });
+}
 
 setLanguage(detectInitialLang());
-
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        warmUp("bio");
-    }, 300);
-});
+finishReturnTransition();

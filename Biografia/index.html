@@ -12,6 +12,7 @@
         <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     </head>
+
     <body>
         <header class="navbar">
             <div class="navbar-bar">
@@ -21,14 +22,24 @@
                         <span></span>
                         <span></span>
                     </div>
+
                     Menu
+
                     <i class="fa-solid fa-chevron-down" id="chevron"></i>
                 </button>
 
                 <nav class="desktop-nav">
-                    <a href="#"><i class="fa-solid fa-link"></i><span data-i18n="navBio">Bio</span></a>
+                    <a href="#">
+                        <i class="fa-solid fa-link"></i>
+                        <span data-i18n="navBio">Bio</span>
+                    </a>
+
                     <div class="desktop-nav-divider"></div>
-                    <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i><span data-i18n="navComingSoon">In futuro...</span></span>
+
+                    <span class="menu-soon">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <span data-i18n="navComingSoon">In futuro...</span>
+                    </span>
                 </nav>
 
                 <div class="lang-menu-wrapper">
@@ -41,17 +52,38 @@
             </div>
 
             <div class="dropdown-menu" id="dropdown-menu">
-                <a href="#"><i class="fa-solid fa-link"></i><span data-i18n="menuBioLink">BIO</span></a>
+                <a href="#">
+                    <i class="fa-solid fa-link"></i>
+                    <span data-i18n="menuBioLink">BIO</span>
+                </a>
+
                 <div class="menu-divider"></div>
-                <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i><span data-i18n="menuComingSoon">IN FUTURO...</span></span>
+
+                <span class="menu-soon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span data-i18n="menuComingSoon">IN FUTURO...</span>
+                </span>
             </div>
 
             <div class="lang-dropdown" id="lang-dropdown">
-                <a href="#" data-lang="it" class="lang-option"><span class="lang-flag">🇮🇹</span> <span data-i18n="langNameIt">Italiano (IT)</span></a>
+                <a href="#" data-lang="it" class="lang-option">
+                    <span class="lang-flag">🇮🇹</span>
+                    <span data-i18n="langNameIt">Italiano (IT)</span>
+                </a>
+
                 <div class="menu-divider"></div>
-                <a href="#" data-lang="en" class="lang-option"><span class="lang-flag">🇬🇧</span> <span data-i18n="langNameEn">English (EN)</span></a>
+
+                <a href="#" data-lang="en" class="lang-option">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span data-i18n="langNameEn">English (EN)</span>
+                </a>
+
                 <div class="menu-divider"></div>
-                <a href="#" data-lang="es" class="lang-option"><span class="lang-flag">🇪🇸</span> <span data-i18n="langNameEs">Español (ES)</span></a>
+
+                <a href="#" data-lang="es" class="lang-option">
+                    <span class="lang-flag">🇪🇸</span>
+                    <span data-i18n="langNameEs">Español (ES)</span>
+                </a>
             </div>
         </header>
 
@@ -62,7 +94,9 @@
                         <span class="panel-close-x"></span>
                     </button>
 
-                    <span class="panel-title" data-i18n="panelTitle">Portfolio Personale</span>
+                    <span class="panel-title" data-i18n="panelTitle">
+                        Portfolio Personale
+                    </span>
                 </div>
 
                 <div class="panel-body">
@@ -90,24 +124,53 @@
                     <div class="divider"></div>
 
                     <div class="connect">
-                        <div class="connect-label" data-i18n="connectLabel">Link dei miei social</div>
+                        <div class="connect-label" data-i18n="connectLabel">
+                            Link dei miei social
+                        </div>
 
                         <a class="port port-tiktok" href="https://www.tiktok.com/@mathiasggxmitic" target="_blank">
-                            <span class="port-icon"><i class="fa-brands fa-tiktok"></i></span>
-                            <span class="port-name">TikTok</span>
-                            <span class="port-status"><i class="dot"></i>Online</span>
+                            <span class="port-icon">
+                                <i class="fa-brands fa-tiktok"></i>
+                            </span>
+
+                            <span class="port-name">
+                                TikTok
+                            </span>
+
+                            <span class="port-status">
+                                <i class="dot"></i>
+                                Online
+                            </span>
                         </a>
 
                         <a class="port port-twitch" href="https://www.twitch.tv/mathiasggxmitic_" target="_blank">
-                            <span class="port-icon"><i class="fa-brands fa-twitch"></i></span>
-                            <span class="port-name">Twitch</span>
-                            <span class="port-status"><i class="dot"></i>Online</span>
+                            <span class="port-icon">
+                                <i class="fa-brands fa-twitch"></i>
+                            </span>
+
+                            <span class="port-name">
+                                Twitch
+                            </span>
+
+                            <span class="port-status">
+                                <i class="dot"></i>
+                                Online
+                            </span>
                         </a>
 
                         <a class="port port-instagram" href="https://www.instagram.com/mathiasggxmitic/" target="_blank">
-                            <span class="port-icon"><i class="fa-brands fa-instagram"></i></span>
-                            <span class="port-name">Instagram</span>
-                            <span class="port-status"><i class="dot"></i>Online</span>
+                            <span class="port-icon">
+                                <i class="fa-brands fa-instagram"></i>
+                            </span>
+
+                            <span class="port-name">
+                                Instagram
+                            </span>
+
+                            <span class="port-status">
+                                <i class="dot"></i>
+                                Online
+                            </span>
                         </a>
                     </div>
                 </div>
@@ -120,6 +183,10 @@
                 </p>
             </footer>
         </main>
+
+        <div class="page-transition" id="page-transition" aria-hidden="true" hidden>
+            <div class="transition-icon" id="transition-icon"></div>
+        </div>
 
         <script src="JS/translations.js"></script>
         <script src="JS/index-script.js"></script>

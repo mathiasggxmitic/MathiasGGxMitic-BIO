@@ -54,18 +54,6 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition:
-        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-        filter 0.5s ease;
-}
-
-body.app-open {
-    overflow: hidden;
-}
-
-body.app-open main {
-    transform: scale(0.97);
-    filter: brightness(0.55);
 }
 
 .navbar {
@@ -111,9 +99,7 @@ body.app-open main {
     cursor: pointer;
     color: var(--text-dim);
     background: var(--panel);
-    transition:
-        border-color 0.2s ease,
-        color 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
     font-family: var(--mono);
     font-size: 12px;
     font-weight: 500;
@@ -261,11 +247,14 @@ body.app-open main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-self: center;
+    width: max-content;
     gap: 12px;
-    padding: 8px 4px 10px 4px;
+    padding: 0;
+    margin: 0;
     background: transparent;
     border: 0;
-    border-radius: 6px;
+    border-radius: 0;
     color: var(--text);
     font: inherit;
     cursor: pointer;
@@ -362,48 +351,39 @@ body.app-open main {
     flex-shrink: 0;
 }
 
-.app-window {
+.page-transition {
     position: fixed;
     inset: 0;
-    z-index: 2000;
+    z-index: 3000;
     background: var(--bg);
-    overflow: hidden;
+    pointer-events: none;
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0px);
 }
 
-.app-window[hidden] {
+.page-transition[hidden] {
     display: none;
 }
 
-.app-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    background: var(--bg);
-    opacity: 0;
-    transition: opacity 0.22s ease;
+.page-transition.is-active {
+    display: block;
 }
 
-.app-frame.is-visible {
-    opacity: 1;
-}
-
-.app-splash {
+.transition-icon {
     position: absolute;
     left: 50%;
     top: 50%;
-    z-index: 1;
+    display: grid;
+    place-items: center;
     pointer-events: none;
-    transition: opacity 0.2s ease;
 }
 
-.app-splash.is-hidden {
+.transition-icon.is-hidden {
     opacity: 0;
 }
 
-.app-splash .app-icon {
-    transition: none;
+.transition-icon .app-icon {
+    margin: 0;
     transform: none;
 }
 
@@ -467,10 +447,7 @@ body.app-open main {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    main,
-    .app-icon,
-    .app-frame,
-    .app-splash {
+    .page-transition {
         transition-duration: 0.01ms;
     }
 }

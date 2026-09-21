@@ -269,12 +269,6 @@ main {
     transition: filter 0.15s ease;
 }
 
-.panel-close::before {
-    content: "";
-    position: absolute;
-    inset: -10px;
-}
-
 .panel-close:hover {
     filter: brightness(1.08);
 }
@@ -599,4 +593,36 @@ main {
         font-size: 12px;
         width: auto;
     }
+}
+
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: var(--bg);
+    pointer-events: none;
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0px);
+}
+
+.page-transition[hidden] {
+    display: none;
+}
+
+.page-transition.is-active {
+    display: block;
+}
+
+.transition-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+
+.transition-icon .app-icon {
+    margin: 0;
+    transform: none;
 }
