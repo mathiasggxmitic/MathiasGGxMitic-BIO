@@ -12,10 +12,13 @@
         <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     </head>
+
     <body>
         <header class="navbar" id="home-navbar">
             <div class="navbar-bar">
-                <span class="brand"><span class="brand-prefix">~/</span>MathiasGGxMitic</span>
+                <span class="brand">
+                    <span class="brand-prefix">~/</span>MathiasGGxMitic
+                </span>
 
                 <div class="lang-menu-wrapper">
                     <button class="lang-btn" id="lang-btn" data-i18n-attr="aria-label:langBtnAriaLabel" aria-label="Cambia lingua">
@@ -27,11 +30,24 @@
             </div>
 
             <div class="lang-dropdown" id="lang-dropdown">
-                <a href="#" data-lang="it" class="lang-option"><span class="lang-flag">🇮🇹</span> <span data-i18n="langNameIt">Italiano (IT)</span></a>
+                <a href="#" data-lang="it" class="lang-option">
+                    <span class="lang-flag">🇮🇹</span>
+                    <span data-i18n="langNameIt">Italiano (IT)</span>
+                </a>
+
                 <div class="menu-divider"></div>
-                <a href="#" data-lang="en" class="lang-option"><span class="lang-flag">🇬🇧</span> <span data-i18n="langNameEn">English (EN)</span></a>
+
+                <a href="#" data-lang="en" class="lang-option">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span data-i18n="langNameEn">English (EN)</span>
+                </a>
+
                 <div class="menu-divider"></div>
-                <a href="#" data-lang="es" class="lang-option"><span class="lang-flag">🇪🇸</span> <span data-i18n="langNameEs">Español (ES)</span></a>
+
+                <a href="#" data-lang="es" class="lang-option">
+                    <span class="lang-flag">🇪🇸</span>
+                    <span data-i18n="langNameEs">Español (ES)</span>
+                </a>
             </div>
         </header>
 
@@ -40,35 +56,55 @@
                 <div class="panel-header">
                     <span class="panel-title" data-i18n="panelTitle">Home</span>
                 </div>
+
                 <div class="panel-body">
-                    <div class="launcher-label" data-i18n="launcherLabel">Scegli cosa aprire</div>
+                    <div class="launcher-label" data-i18n="launcherLabel">
+                        Scegli cosa aprire
+                    </div>
 
                     <div class="launcher">
                         <button class="app-tile" type="button" data-app="bio">
-                            <span class="app-icon app-icon-bio"><i class="fa-solid fa-user"></i></span>
+                            <span class="app-icon app-icon-bio">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+
                             <span class="app-label" data-i18n="appBio">Bio</span>
                         </button>
 
                         <button class="app-tile" type="button" data-app="projects">
-                            <span class="app-icon app-icon-projects"><i class="fa-solid fa-folder-open"></i></span>
+                            <span class="app-icon app-icon-projects">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </span>
+
                             <span class="app-label" data-i18n="appProjects">Progetti</span>
-                            <span class="app-status"><i class="dot-idle"></i><span data-i18n="statusSoon">In arrivo</span></span>
+
+                            <span class="app-status">
+                                <i class="dot-idle"></i>
+                                <span data-i18n="statusSoon">In arrivo</span>
+                            </span>
                         </button>
 
                         <button class="app-tile" type="button" data-app="soon" aria-disabled="true">
-                            <span class="app-icon app-icon-soon"><i class="fa-solid fa-screwdriver-wrench"></i></span>
-                            <span class="app-label app-label-dim" data-i18n="appSoon">In futuro...</span>
+                            <span class="app-icon app-icon-soon">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            </span>
+
+                            <span class="app-label app-label-dim" data-i18n="appSoon">
+                                In futuro...
+                            </span>
                         </button>
                     </div>
                 </div>
             </section>
 
             <footer class="log-note">
-                <p><span class="log-tag">[INFO]</span><span data-i18n="footerInfo">Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing.</span></p>
+                <p>
+                    <span class="log-tag">[INFO]</span>
+                    <span data-i18n="footerInfo">Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing.</span>
+                </p>
             </footer>
         </main>
 
-        <!-- Finestra dell'app: resta fuori da <main> così non viene toccata dagli effetti sulla home -->
         <div class="app-window" id="app-window" hidden>
             <div class="app-splash" id="app-splash"></div>
             <iframe class="app-frame" id="app-frame" title=""></iframe>

@@ -54,10 +54,11 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+    transition:
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.5s ease;
 }
 
-/* Mentre un'app è aperta la home resta sullo sfondo, leggermente indietro e più scura */
 body.app-open {
     overflow: hidden;
 }
@@ -66,8 +67,6 @@ body.app-open main {
     transform: scale(0.97);
     filter: brightness(0.55);
 }
-
-/* ---------- Navbar (stessa della bio) ---------- */
 
 .navbar {
     position: fixed;
@@ -112,7 +111,9 @@ body.app-open main {
     cursor: pointer;
     color: var(--text-dim);
     background: var(--panel);
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition:
+        border-color 0.2s ease,
+        color 0.2s ease;
     font-family: var(--mono);
     font-size: 12px;
     font-weight: 500;
@@ -154,7 +155,10 @@ body.app-open main {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
@@ -170,7 +174,9 @@ body.app-open main {
     color: var(--text);
     background: transparent;
     border-left: 2px solid transparent;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
     text-align: left;
     font-family: var(--mono);
     font-size: 13px;
@@ -198,8 +204,6 @@ body.app-open main {
     height: 1px;
     background: var(--border);
 }
-
-/* ---------- Pannello (stesso della bio) ---------- */
 
 .panel {
     width: 100%;
@@ -246,8 +250,6 @@ body.app-open main {
     margin-bottom: 26px;
 }
 
-/* ---------- Launcher: le "app" ---------- */
-
 .launcher {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -286,7 +288,10 @@ body.app-open main {
     border-radius: 17px;
     font-size: 30px;
     color: var(--accent);
-    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .app-icon-projects {
@@ -357,8 +362,6 @@ body.app-open main {
     flex-shrink: 0;
 }
 
-/* ---------- Finestra dell'app (animazione stile macOS) ---------- */
-
 .app-window {
     position: fixed;
     inset: 0;
@@ -386,7 +389,6 @@ body.app-open main {
     opacity: 1;
 }
 
-/* l'icona dell'app che "diventa" la finestra: sta al centro mentre la bio carica */
 .app-splash {
     position: absolute;
     left: 50%;
@@ -404,8 +406,6 @@ body.app-open main {
     transition: none;
     transform: none;
 }
-
-/* ---------- Note in fondo ---------- */
 
 .log-note {
     width: 100%;
@@ -426,8 +426,6 @@ body.app-open main {
     color: var(--accent);
     margin-right: 6px;
 }
-
-/* ---------- Responsive ---------- */
 
 @media (max-width: 520px) {
     main {

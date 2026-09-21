@@ -23,6 +23,7 @@ const TRANSLATIONS = {
         connectLabel: "Link dei miei social",
         footerInfo: "Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing."
     },
+
     en: {
         htmlLang: "en",
         metaDescription: "Bio of MathiasGGxMitic",
@@ -47,6 +48,7 @@ const TRANSLATIONS = {
         connectLabel: "My social links",
         footerInfo: "This website is a simple personal informational page: it does not use cookies, does not track analytics, and does not collect personal data. The hosting platform may process the IP address of visitors solely to ensure website security and prevent cyber attacks, without any commercial or marketing purpose."
     },
+
     es: {
         htmlLang: "es",
         metaDescription: "Biografía de MathiasGGxMitic",

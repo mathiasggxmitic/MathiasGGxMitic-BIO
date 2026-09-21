@@ -76,7 +76,8 @@ main {
     border-bottom: 1px solid var(--border);
 }
 
-.menu-btn, .lang-btn {
+.menu-btn,
+.lang-btn {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -94,7 +95,8 @@ main {
     text-transform: uppercase;
 }
 
-.menu-btn:hover, .lang-btn:hover {
+.menu-btn:hover,
+.lang-btn:hover {
     border-color: var(--accent);
     color: var(--accent);
 }
@@ -118,16 +120,19 @@ main {
     filter: grayscale(20%);
 }
 
-#chevron, #lang-chevron {
+#chevron,
+#lang-chevron {
     transition: transform 0.25s ease;
     font-size: 9px;
 }
 
-#chevron.open, #lang-chevron.open {
+#chevron.open,
+#lang-chevron.open {
     transform: rotate(180deg);
 }
 
-.dropdown-menu, .lang-dropdown {
+.dropdown-menu,
+.lang-dropdown {
     position: absolute;
     top: calc(100% + 8px);
     border-radius: 4px;
@@ -139,7 +144,10 @@ main {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
@@ -153,19 +161,23 @@ main {
     width: 210px;
 }
 
-.dropdown-menu.active, .lang-dropdown.active {
+.dropdown-menu.active,
+.lang-dropdown.active {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-.dropdown-menu a, .lang-dropdown a {
+.dropdown-menu a,
+.lang-dropdown a {
     padding: 14px 16px;
     text-decoration: none;
     color: var(--text);
     background: transparent;
     border-left: 2px solid transparent;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
     text-align: left;
     font-family: var(--mono);
     font-size: 13px;
@@ -178,7 +190,8 @@ main {
     width: 100%;
 }
 
-.dropdown-menu a:hover, .lang-dropdown a:hover {
+.dropdown-menu a:hover,
+.lang-dropdown a:hover {
     background: var(--panel-alt);
     border-left-color: var(--accent);
 }
@@ -241,8 +254,6 @@ main {
     position: relative;
 }
 
-/* Pulsante rosso in stile macOS: chiude la bio e torna alla home.
-   La "x" compare quando ci si passa sopra (o sempre sui dispositivi touch). */
 .panel-close {
     position: relative;
     display: grid;
@@ -258,7 +269,6 @@ main {
     transition: filter 0.15s ease;
 }
 
-/* area di tocco più grande del cerchio visibile */
 .panel-close::before {
     content: "";
     position: absolute;
@@ -436,7 +446,9 @@ main {
     background: var(--panel-alt);
     text-decoration: none;
     color: var(--text);
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
 }
 
 .port:first-of-type {
@@ -456,9 +468,17 @@ main {
     transition: color 0.2s ease;
 }
 
-.port-tiktok .port-icon { color: #d9dce0; }
-.port-twitch .port-icon { color: #9147ff; }
-.port-instagram .port-icon { color: #e1306c; }
+.port-tiktok .port-icon {
+    color: #d9dce0;
+}
+
+.port-twitch .port-icon {
+    color: #9147ff;
+}
+
+.port-instagram .port-icon {
+    color: #e1306c;
+}
 
 .port-name {
     flex: 1;
