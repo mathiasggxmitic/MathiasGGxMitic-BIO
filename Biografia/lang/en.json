@@ -19,5 +19,7 @@
     "fieldBio": "Bio",
     "bioText": "I am an Italian student passionate about technology and frontend web development. I focus mainly on improving user interfaces (UI) and user experience (UX), creating modern, intuitive, and detailed websites. In my free time, I assemble PCs and perform hardware maintenance, including cleaning, upgrades, component selection, and maintenance for both desktop and laptop computers.",
     "connectLabel": "My social links",
-    "footerInfo": "This website is a simple personal informational page: it does not use cookies, does not track analytics, and does not collect personal data. The hosting platform may process the IP address of visitors solely to ensure website security and prevent cyber attacks, without any commercial or marketing purpose."
+    "footerInfo": "This website is a simple personal informational page: it does not use cookies, does not track analytics, and does not collect personal data. The hosting platform may process the IP address of visitors solely to ensure website security and prevent cyber attacks, without any commercial or marketing purpose.",
+    "closeBtnAriaLabel": "Close and go back to home",
+    "menuButton": "Menu"
 }

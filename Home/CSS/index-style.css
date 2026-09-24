@@ -54,6 +54,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
 }
 
 .navbar {
@@ -141,10 +142,7 @@ main {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
@@ -160,9 +158,7 @@ main {
     color: var(--text);
     background: transparent;
     border-left: 2px solid transparent;
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
     text-align: left;
     font-family: var(--mono);
     font-size: 13px;
@@ -277,10 +273,7 @@ main {
     border-radius: 17px;
     font-size: 30px;
     color: var(--accent);
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease,
-        transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .app-icon-projects {
@@ -351,42 +344,6 @@ main {
     flex-shrink: 0;
 }
 
-.page-transition {
-    position: fixed;
-    inset: 0;
-    z-index: 3000;
-    background: var(--bg);
-    pointer-events: none;
-    opacity: 1;
-    clip-path: inset(0 0 0 0 round 0px);
-}
-
-.page-transition[hidden] {
-    display: none;
-}
-
-.page-transition.is-active {
-    display: block;
-}
-
-.transition-icon {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    display: grid;
-    place-items: center;
-    pointer-events: none;
-}
-
-.transition-icon.is-hidden {
-    opacity: 0;
-}
-
-.transition-icon .app-icon {
-    margin: 0;
-    transform: none;
-}
-
 .log-note {
     width: 100%;
     max-width: 620px;
@@ -450,4 +407,33 @@ main {
     .page-transition {
         transition-duration: 0.01ms;
     }
+}
+
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: var(--bg);
+    pointer-events: none;
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0px);
+}
+
+.page-transition[hidden] {
+    display: none;
+}
+
+html.transition-enter::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    background: var(--bg);
+    pointer-events: none;
+    opacity: 1;
+}
+
+html.transition-enter.transition-ready::after {
+    opacity: 0;
+    transition: opacity 0.22s ease-out;
 }

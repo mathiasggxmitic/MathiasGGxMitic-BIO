@@ -1,194 +1,87 @@
 <!DOCTYPE html>
 <html lang="it" id="html-root">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Bio di MathiasGGxMitic" id="meta-description">
-        <title>MathiasGGxMitic BIO</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="CSS/index-style.css">
-        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
-    </head>
-
-    <body>
-        <header class="navbar">
-            <div class="navbar-bar">
-                <button class="menu-btn" id="menu-btn" data-i18n-attr="aria-label:menuBtnAriaLabel" aria-label="Apri menu di navigazione">
-                    <div class="menu-lines">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-
-                    Menu
-
-                    <i class="fa-solid fa-chevron-down" id="chevron"></i>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" id="meta-description">
+    <title>MathiasGGxMitic BIO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://mathiasggxmitic.it" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/index-style.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("transition") === "home-to-bio") document.documentElement.classList.add("transition-enter");
+        })();
+    </script>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-bar">
+            <button class="menu-btn" id="menu-btn" type="button" data-i18n-attr="aria-label:menuBtnAriaLabel" aria-label="">
+                <div class="menu-lines"><span></span><span></span><span></span></div>
+                <span data-i18n="menuButton"></span>
+                <i class="fa-solid fa-chevron-down" id="chevron"></i>
+            </button>
+            <nav class="desktop-nav">
+                <a href="#"><i class="fa-solid fa-link"></i><span data-i18n="navBio"></span></a>
+                <div class="desktop-nav-divider"></div>
+                <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i><span data-i18n="navComingSoon"></span></span>
+            </nav>
+            <div class="lang-menu-wrapper">
+                <button class="lang-btn" id="lang-btn" type="button" data-i18n-attr="aria-label:langBtnAriaLabel" aria-label="">
+                    <span class="lang-flag" id="lang-flag-current"></span>
+                    <span class="lang-text" id="lang-code-current"></span>
+                    <i class="fa-solid fa-chevron-down" id="lang-chevron"></i>
                 </button>
-
-                <nav class="desktop-nav">
-                    <a href="#">
-                        <i class="fa-solid fa-link"></i>
-                        <span data-i18n="navBio">Bio</span>
-                    </a>
-
-                    <div class="desktop-nav-divider"></div>
-
-                    <span class="menu-soon">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                        <span data-i18n="navComingSoon">In futuro...</span>
-                    </span>
-                </nav>
-
-                <div class="lang-menu-wrapper">
-                    <button class="lang-btn" id="lang-btn" data-i18n-attr="aria-label:langBtnAriaLabel" aria-label="Cambia lingua">
-                        <span class="lang-flag" id="lang-flag-current">🇮🇹</span>
-                        <span class="lang-text" id="lang-code-current">IT</span>
-                        <i class="fa-solid fa-chevron-down" id="lang-chevron"></i>
-                    </button>
-                </div>
             </div>
-
-            <div class="dropdown-menu" id="dropdown-menu">
-                <a href="#">
-                    <i class="fa-solid fa-link"></i>
-                    <span data-i18n="menuBioLink">BIO</span>
-                </a>
-
-                <div class="menu-divider"></div>
-
-                <span class="menu-soon">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span data-i18n="menuComingSoon">IN FUTURO...</span>
-                </span>
-            </div>
-
-            <div class="lang-dropdown" id="lang-dropdown">
-                <a href="#" data-lang="it" class="lang-option">
-                    <span class="lang-flag">🇮🇹</span>
-                    <span data-i18n="langNameIt">Italiano (IT)</span>
-                </a>
-
-                <div class="menu-divider"></div>
-
-                <a href="#" data-lang="en" class="lang-option">
-                    <span class="lang-flag">🇬🇧</span>
-                    <span data-i18n="langNameEn">English (EN)</span>
-                </a>
-
-                <div class="menu-divider"></div>
-
-                <a href="#" data-lang="es" class="lang-option">
-                    <span class="lang-flag">🇪🇸</span>
-                    <span data-i18n="langNameEs">Español (ES)</span>
-                </a>
-            </div>
-        </header>
-
-        <main>
-            <section class="panel">
-                <div class="panel-header">
-                    <button class="panel-close" id="panel-close" type="button" data-i18n-attr="aria-label:closeBtnAriaLabel" aria-label="Chiudi e torna alla home">
-                        <span class="panel-close-x"></span>
-                    </button>
-
-                    <span class="panel-title" data-i18n="panelTitle">
-                        Portfolio Personale
-                    </span>
-                </div>
-
-                <div class="panel-body">
-                    <div class="avatar-wrap">
-                        <img class="pfp" src="foto_profilo.webp" data-i18n-attr="alt:pfpAlt" alt="Foto profilo di MathiasGGxMitic">
-                    </div>
-
-                    <dl class="fields">
-                        <div class="field">
-                            <dt data-i18n="fieldName">Nome</dt>
-                            <dd>Mathias Giuseppe Morrone</dd>
-                        </div>
-
-                        <div class="field">
-                            <dt data-i18n="fieldNickname">Nickname</dt>
-                            <dd>@MathiasGGxMitic</dd>
-                        </div>
-
-                        <div class="field field-bio">
-                            <dt data-i18n="fieldBio">Bio</dt>
-                            <dd data-i18n="bioText">Sono uno studente italiano appassionato di tecnologia e sviluppo web frontend. Mi occupo principalmente di migliorare interfacce grafiche (UI) ed esperienza utente (UX), creando siti moderni, intuitivi e curati nei dettagli. Nel tempo libero assemblo PC ed eseguo manutenzione hardware, tra cui pulizia, upgrade, selezione dei componenti e manutenzione di computer desktop e portatili.</dd>
-                        </div>
-                    </dl>
-
-                    <div class="divider"></div>
-
-                    <div class="connect">
-                        <div class="connect-label" data-i18n="connectLabel">
-                            Link dei miei social
-                        </div>
-
-                        <a class="port port-tiktok" href="https://www.tiktok.com/@mathiasggxmitic" target="_blank">
-                            <span class="port-icon">
-                                <i class="fa-brands fa-tiktok"></i>
-                            </span>
-
-                            <span class="port-name">
-                                TikTok
-                            </span>
-
-                            <span class="port-status">
-                                <i class="dot"></i>
-                                Online
-                            </span>
-                        </a>
-
-                        <a class="port port-twitch" href="https://www.twitch.tv/mathiasggxmitic_" target="_blank">
-                            <span class="port-icon">
-                                <i class="fa-brands fa-twitch"></i>
-                            </span>
-
-                            <span class="port-name">
-                                Twitch
-                            </span>
-
-                            <span class="port-status">
-                                <i class="dot"></i>
-                                Online
-                            </span>
-                        </a>
-
-                        <a class="port port-instagram" href="https://www.instagram.com/mathiasggxmitic/" target="_blank">
-                            <span class="port-icon">
-                                <i class="fa-brands fa-instagram"></i>
-                            </span>
-
-                            <span class="port-name">
-                                Instagram
-                            </span>
-
-                            <span class="port-status">
-                                <i class="dot"></i>
-                                Online
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <footer class="log-note">
-                <p>
-                    <span class="log-tag">[INFO]</span>
-                    <span data-i18n="footerInfo">Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing.</span>
-                </p>
-            </footer>
-        </main>
-
-        <div class="page-transition" id="page-transition" aria-hidden="true" hidden>
-            <div class="transition-icon" id="transition-icon"></div>
         </div>
-
-        <script src="JS/translations.js"></script>
-        <script src="JS/index-script.js"></script>
-    </body>
+        <div class="dropdown-menu" id="dropdown-menu">
+            <a href="#"><i class="fa-solid fa-link"></i><span data-i18n="menuBioLink"></span></a>
+            <div class="menu-divider"></div>
+            <span class="menu-soon"><i class="fa-solid fa-screwdriver-wrench"></i><span data-i18n="menuComingSoon"></span></span>
+        </div>
+        <div class="lang-dropdown" id="lang-dropdown">
+            <a href="#" data-lang="it" class="lang-option"><span class="lang-flag"></span> <span data-i18n="langNameIt"></span></a>
+            <div class="menu-divider"></div>
+            <a href="#" data-lang="en" class="lang-option"><span class="lang-flag"></span> <span data-i18n="langNameEn"></span></a>
+            <div class="menu-divider"></div>
+            <a href="#" data-lang="es" class="lang-option"><span class="lang-flag"></span> <span data-i18n="langNameEs"></span></a>
+        </div>
+    </header>
+    <main>
+        <section class="panel">
+            <div class="panel-header">
+                <button class="panel-close" id="panel-close" type="button" data-i18n-attr="aria-label:closeBtnAriaLabel" aria-label=""><span class="panel-close-x"></span></button>
+                <span class="panel-title" data-i18n="panelTitle"></span>
+            </div>
+            <div class="panel-body">
+                <div class="avatar-wrap">
+                    <img class="pfp" src="foto_profilo.webp" data-i18n-attr="alt:pfpAlt" alt="">
+                </div>
+                <dl class="fields">
+                    <div class="field"><dt data-i18n="fieldName"></dt><dd>Mathias Giuseppe Morrone</dd></div>
+                    <div class="field"><dt data-i18n="fieldNickname"></dt><dd>@MathiasGGxMitic</dd></div>
+                    <div class="field field-bio"><dt data-i18n="fieldBio"></dt><dd data-i18n="bioText"></dd></div>
+                </dl>
+                <div class="divider"></div>
+                <div class="connect">
+                    <div class="connect-label" data-i18n="connectLabel"></div>
+                    <a class="port port-tiktok" href="https://www.tiktok.com/@mathiasggxmitic" target="_blank"><span class="port-icon"><i class="fa-brands fa-tiktok"></i></span><span class="port-name">TikTok</span><span class="port-status"><i class="dot"></i>Online</span></a>
+                    <a class="port port-twitch" href="https://www.twitch.tv/mathiasggxmitic_" target="_blank"><span class="port-icon"><i class="fa-brands fa-twitch"></i></span><span class="port-name">Twitch</span><span class="port-status"><i class="dot"></i>Online</span></a>
+                    <a class="port port-instagram" href="https://www.instagram.com/mathiasggxmitic/" target="_blank"><span class="port-icon"><i class="fa-brands fa-instagram"></i></span><span class="port-name">Instagram</span><span class="port-status"><i class="dot"></i>Online</span></a>
+                </div>
+            </div>
+        </section>
+        <footer class="log-note">
+            <p><span class="log-tag">[INFO]</span><span data-i18n="footerInfo"></span></p>
+        </footer>
+    </main>
+    <div class="page-transition" id="page-transition" aria-hidden="true" hidden></div>
+    <script src="JS/index-script.js"></script>
+</body>
 </html>

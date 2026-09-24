@@ -19,5 +19,7 @@
     "fieldBio": "Bio",
     "bioText": "Soy un estudiante italiano apasionado por la tecnología y el desarrollo web frontend. Me dedico principalmente a mejorar las interfaces de usuario (UI) y la experiencia de usuario (UX), creando sitios web modernos, intuitivos y cuidados en los detalles. En mi tiempo libre, ensamblo PCs y realizo mantenimiento de hardware, incluyendo limpieza, actualizaciones, selección de componentes y mantenimiento de ordenadores de escritorio y portátiles.",
     "connectLabel": "Mis redes sociales",
-    "footerInfo": "Este sitio web es una simple página informativa personal: no utiliza cookies, no realiza seguimiento y no recopila datos personales. La plataforma de alojamiento puede procesar la dirección IP de los visitantes únicamente para garantizar la seguridad del sitio web y prevenir ataques informáticos, sin ningún propósito comercial o de marketing."
+    "footerInfo": "Este sitio web es una simple página informativa personal: no utiliza cookies, no realiza seguimiento y no recopila datos personales. La plataforma de alojamiento puede procesar la dirección IP de los visitantes únicamente para garantizar la seguridad del sitio web y prevenir ataques informáticos, sin ningún propósito comercial o de marketing.",
+    "closeBtnAriaLabel": "Cerrar y volver al inicio",
+    "menuButton": "Menú"
 }

@@ -1,337 +1,183 @@
 const HOME_URL = "https://mathiasggxmitic.it/";
 const TRANSITION_PARAM = "transition";
+const LANG_PARAM = "lang";
+const SUPPORTED_LANGS = ["it", "en", "es"];
+const DEFAULT_LANG = "it";
+const LANG_STORAGE_KEY = "site-lang";
+const CLOSE_MS = 420;
 
 const menuBtn = document.getElementById("menu-btn");
 const dropdownMenu = document.getElementById("dropdown-menu");
 const chevron = document.getElementById("chevron");
-
 const langBtn = document.getElementById("lang-btn");
 const langDropdown = document.getElementById("lang-dropdown");
 const langChevron = document.getElementById("lang-chevron");
-
 const panelClose = document.getElementById("panel-close");
 const transition = document.getElementById("page-transition");
-const transitionIcon = document.getElementById("transition-icon");
-
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-const SUPPORTED_LANGS = ["it", "en", "es"];
-const DEFAULT_LANG = "it";
-const LANG_STORAGE_KEY = "site-lang";
-
 let navigationBusy = false;
+let currentLang = DEFAULT_LANG;
+
+function getQueryValue(name) {
+    return new URL(window.location.href).searchParams.get(name);
+}
 
 function detectInitialLang() {
-    try {
-        const params = new URLSearchParams(window.location.search);
-        const fromQuery = params.get("lang");
-
-        if (fromQuery && SUPPORTED_LANGS.includes(fromQuery)) {
-            return fromQuery;
-        }
-    } catch {}
-
+    const fromQuery = getQueryValue(LANG_PARAM);
+    if (SUPPORTED_LANGS.includes(fromQuery)) return fromQuery;
     try {
         const saved = localStorage.getItem(LANG_STORAGE_KEY);
-
-        if (saved && SUPPORTED_LANGS.includes(saved)) {
-            return saved;
-        }
+        if (SUPPORTED_LANGS.includes(saved)) return saved;
     } catch {}
-
     return DEFAULT_LANG;
 }
 
-function applyTranslations(lang) {
-    if (!SUPPORTED_LANGS.includes(lang)) {
-        lang = DEFAULT_LANG;
-    }
+async function loadLanguage(lang) {
+    const requested = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+    const response = await fetch(`lang/${requested}.json`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Language file unavailable: ${requested}`);
+    return response.json();
+}
 
-    const dict = TRANSLATIONS[lang];
-
-    if (!dict) {
-        return;
-    }
-
-    const htmlRoot = document.getElementById("html-root");
-    const metaDescription = document.getElementById("meta-description");
-    const flagEl = document.getElementById("lang-flag-current");
-    const codeEl = document.getElementById("lang-code-current");
-
-    if (htmlRoot) {
-        htmlRoot.setAttribute("lang", dict.htmlLang || lang);
-    }
-
-    if (metaDescription) {
-        metaDescription.setAttribute("content", dict.metaDescription);
-    }
-
-    if (flagEl) {
-        flagEl.textContent = dict.langFlag;
-    }
-
-    if (codeEl) {
-        codeEl.textContent = dict.langCode;
-    }
-
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-        const key = el.getAttribute("data-i18n");
-
-        if (dict[key] !== undefined) {
-            el.textContent = dict[key];
-        }
+function applyTranslations(dict, lang) {
+    document.documentElement.lang = dict.htmlLang || lang;
+    document.getElementById("meta-description").content = dict.metaDescription;
+    document.getElementById("lang-flag-current").textContent = dict.langFlag;
+    document.getElementById("lang-code-current").textContent = dict.langCode;
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.dataset.i18n;
+        if (dict[key] !== undefined) element.textContent = dict[key];
     });
-
-    document.querySelectorAll("[data-i18n-attr]").forEach((el) => {
-        el.getAttribute("data-i18n-attr").split(",").forEach((pair) => {
-            const [attr, key] = pair
-                .split(":")
-                .map((value) => value.trim());
-
-            if (attr && dict[key] !== undefined) {
-                el.setAttribute(attr, dict[key]);
-            }
+    document.querySelectorAll("[data-i18n-attr]").forEach((element) => {
+        element.dataset.i18nAttr.split(",").forEach((pair) => {
+            const [attribute, key] = pair.split(":").map((value) => value.trim());
+            if (attribute && dict[key] !== undefined) element.setAttribute(attribute, dict[key]);
         });
     });
-
     document.querySelectorAll(".lang-option").forEach((option) => {
-        option.classList.toggle(
-            "active",
-            option.getAttribute("data-lang") === lang
-        );
+        option.classList.toggle("active", option.dataset.lang === lang);
     });
 }
 
-function setLanguage(lang) {
-    if (!SUPPORTED_LANGS.includes(lang)) {
-        lang = DEFAULT_LANG;
-    }
-
-    applyTranslations(lang);
-
-    try {
-        localStorage.setItem(LANG_STORAGE_KEY, lang);
-    } catch {}
-
-    try {
+async function setLanguage(lang, updateUrl = true) {
+    const requested = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+    const dict = await loadLanguage(requested);
+    currentLang = requested;
+    applyTranslations(dict, requested);
+    try { localStorage.setItem(LANG_STORAGE_KEY, requested); } catch {}
+    if (updateUrl) {
         const url = new URL(window.location.href);
-
-        url.searchParams.set("lang", lang);
-
+        url.searchParams.set(LANG_PARAM, requested);
         window.history.replaceState({}, "", url);
-    } catch {}
+    }
 }
 
 function closeMenus() {
-    if (dropdownMenu && chevron) {
-        dropdownMenu.classList.remove("active");
-        chevron.classList.remove("open");
-    }
-
-    if (langDropdown && langChevron) {
-        langDropdown.classList.remove("active");
-        langChevron.classList.remove("open");
-    }
+    dropdownMenu.classList.remove("active");
+    chevron.classList.remove("open");
+    langDropdown.classList.remove("active");
+    langChevron.classList.remove("open");
 }
 
-if (menuBtn && dropdownMenu && chevron) {
-    menuBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
+menuBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const open = dropdownMenu.classList.toggle("active");
+    chevron.classList.toggle("open", open);
+    langDropdown.classList.remove("active");
+    langChevron.classList.remove("open");
+});
 
-        const isOpen = dropdownMenu.classList.toggle("active");
-
-        chevron.classList.toggle("open", isOpen);
-
-        if (langDropdown && langChevron) {
-            langDropdown.classList.remove("active");
-            langChevron.classList.remove("open");
-        }
-    });
-}
-
-if (langBtn && langDropdown && langChevron) {
-    langBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-
-        const isOpen = langDropdown.classList.toggle("active");
-
-        langChevron.classList.toggle("open", isOpen);
-
-        if (dropdownMenu && chevron) {
-            dropdownMenu.classList.remove("active");
-            chevron.classList.remove("open");
-        }
-    });
-}
+langBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const open = langDropdown.classList.toggle("active");
+    langChevron.classList.toggle("open", open);
+    dropdownMenu.classList.remove("active");
+    chevron.classList.remove("open");
+});
 
 document.addEventListener("click", closeMenus);
 
 document.querySelectorAll(".lang-option").forEach((option) => {
-    option.addEventListener("click", (event) => {
+    option.addEventListener("click", async (event) => {
         event.preventDefault();
         event.stopPropagation();
-
-        setLanguage(option.getAttribute("data-lang"));
-
+        await setLanguage(option.dataset.lang);
         closeMenus();
     });
 });
 
-function getTransitionState() {
-    try {
-        return new URL(window.location.href)
-            .searchParams
-            .get(TRANSITION_PARAM);
-    } catch {
-        return null;
-    }
-}
-
-function clearTransitionState() {
-    try {
-        const url = new URL(window.location.href);
-
-        url.searchParams.delete(TRANSITION_PARAM);
-
-        window.history.replaceState({}, "", url);
-    } catch {}
-}
-
 function getCloseRect() {
     const rect = panelClose.getBoundingClientRect();
-
-    return {
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
-        radius: rect.width / 2
-    };
+    return { left: rect.left, top: rect.top, width: rect.width, height: rect.height, radius: rect.width / 2 };
 }
 
 function getClip(rect) {
-    const right =
-        window.innerWidth -
-        rect.left -
-        rect.width;
-
-    const bottom =
-        window.innerHeight -
-        rect.top -
-        rect.height;
-
+    const right = window.innerWidth - rect.left - rect.width;
+    const bottom = window.innerHeight - rect.top - rect.height;
     return `inset(${rect.top}px ${right}px ${bottom}px ${rect.left}px round ${rect.radius}px)`;
 }
 
+function prefetch(url) {
+    if (document.querySelector(`link[data-prefetch-url="${CSS.escape(url)}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "prefetch";
+    link.href = url;
+    link.crossOrigin = "anonymous";
+    link.dataset.prefetchUrl = url;
+    document.head.appendChild(link);
+}
+
 async function closeBio() {
-    if (navigationBusy) {
-        return;
-    }
-
+    if (navigationBusy) return;
     navigationBusy = true;
-
     closeMenus();
-
-    const rect = getCloseRect();
-    const clip = getClip(rect);
-
     const target = new URL(HOME_URL);
-    const currentLang = document.documentElement.lang;
-
-    if (SUPPORTED_LANGS.includes(currentLang)) {
-        target.searchParams.set("lang", currentLang);
-    }
-
-    target.searchParams.set(
-        TRANSITION_PARAM,
-        "bio-to-home"
-    );
-
+    target.searchParams.set(LANG_PARAM, currentLang);
+    target.searchParams.set(TRANSITION_PARAM, "bio-to-home");
+    prefetch(target.href);
     if (reduceMotion.matches) {
         window.location.assign(target.href);
         return;
     }
-
+    const clip = getClip(getCloseRect());
     transition.hidden = false;
-    transition.classList.add("is-active");
-    transition.style.clipPath =
-        "inset(0 0 0 0 round 0px)";
-
-    const animation = transition.animate(
-        [
-            {
-                clipPath: "inset(0 0 0 0 round 0px)"
-            },
-            {
-                clipPath: clip
-            }
-        ],
-        {
-            duration: 420,
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-            fill: "forwards"
-        }
-    );
-
-    await animation.finished;
-
-    window.location.assign(target.href);
-}
-
-if (panelClose) {
-    panelClose.addEventListener("click", closeBio);
-}
-
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-        closeBio();
-    }
-});
-
-function finishOpenTransition() {
-    const state = getTransitionState();
-
-    if (state !== "home-to-bio") {
-        return;
-    }
-
-    clearTransitionState();
-
-    if (!transition) {
-        return;
-    }
-
-    if (reduceMotion.matches) {
-        transition.hidden = true;
-        return;
-    }
-
-    transition.hidden = false;
-    transition.classList.add("is-active");
-    transition.style.clipPath =
-        "inset(0 0 0 0 round 0px)";
-
+    transition.style.clipPath = "inset(0 0 0 0 round 0px)";
+    transition.getBoundingClientRect();
     requestAnimationFrame(() => {
         transition.animate(
-            [
-                {
-                    opacity: 1
-                },
-                {
-                    opacity: 0
-                }
-            ],
-            {
-                duration: 220,
-                easing: "ease-out",
-                fill: "forwards"
-            }
-        ).finished.then(() => {
-            transition.hidden = true;
-            transition.classList.remove("is-active");
-        });
+            [{ clipPath: "inset(0 0 0 0 round 0px)" }, { clipPath: clip }],
+            { duration: CLOSE_MS, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" }
+        ).finished.then(() => window.location.assign(target.href));
     });
 }
 
-setLanguage(detectInitialLang());
-finishOpenTransition();
+panelClose.addEventListener("click", closeBio);
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeBio();
+});
+
+function finishOpenTransition() {
+    if (getQueryValue(TRANSITION_PARAM) !== "home-to-bio") return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete(TRANSITION_PARAM);
+    window.history.replaceState({}, "", url);
+    document.documentElement.classList.add("transition-enter");
+    if (reduceMotion.matches) {
+        document.documentElement.classList.remove("transition-enter");
+        return;
+    }
+    requestAnimationFrame(() => {
+        document.documentElement.classList.add("transition-ready");
+        window.setTimeout(() => {
+            document.documentElement.classList.remove("transition-enter", "transition-ready");
+        }, 240);
+    });
+}
+
+(async () => {
+    try {
+        await setLanguage(detectInitialLang());
+    } catch {}
+    finishOpenTransition();
+})();

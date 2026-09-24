@@ -19,5 +19,7 @@
     "fieldBio": "Bio",
     "bioText": "Sono uno studente italiano appassionato di tecnologia e sviluppo web frontend. Mi occupo principalmente di migliorare interfacce grafiche (UI) ed esperienza utente (UX), creando siti moderni, intuitivi e curati nei dettagli. Nel tempo libero assemblo PC ed eseguo manutenzione hardware, tra cui pulizia, upgrade, selezione dei componenti e manutenzione di computer desktop e portatili.",
     "connectLabel": "Link dei miei social",
-    "footerInfo": "Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing."
+    "footerInfo": "Questo sito è una semplice pagina informativa personale: non utilizza cookie, non effettua tracciamenti e non raccoglie dati personali. La piattaforma di hosting potrebbe elaborare l'indirizzo IP dei visitatori unicamente per garantire la sicurezza del sito e prevenire attacchi informatici, senza alcuno scopo commerciale o di marketing.",
+    "closeBtnAriaLabel": "Chiudi e torna alla home",
+    "menuButton": "Menu"
 }
