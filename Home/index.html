@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" id="html-root">
+<html lang="it" id="html-root" class="is-loading">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="CSS/index-style.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+    <noscript><style>.sk-view{display:none!important}html.is-loading .view-content{display:block}</style></noscript>
     <script>
         (() => {
             const params = new URLSearchParams(window.location.search);
@@ -23,25 +24,37 @@
 <body>
     <header class="navbar" id="home-navbar">
         <div class="navbar-bar">
-            <span class="brand"><span class="brand-prefix">~/</span>MathiasGGxMitic</span>
             <div class="lang-menu-wrapper">
                 <button class="lang-btn" id="lang-btn" type="button" data-i18n-attr="aria-label:langBtnAriaLabel" aria-label="">
-                    <span class="lang-flag" id="lang-flag-current"></span>
+                    <img class="lang-flag" id="lang-flag-current" width="21" height="14" alt="" decoding="async">
                     <span class="lang-text" id="lang-code-current"></span>
                     <i class="fa-solid fa-chevron-down" id="lang-chevron"></i>
                 </button>
             </div>
         </div>
         <div class="lang-dropdown" id="lang-dropdown">
-            <a href="#" data-lang="it" class="lang-option"><span class="lang-flag"></span> <span data-i18n="langNameIt"></span></a>
+            <a href="#" data-lang="it" class="lang-option"><img class="lang-flag" src="assets/flags/it.svg" width="21" height="14" alt="" decoding="async"><span data-i18n="langNameIt"></span></a>
             <div class="menu-divider"></div>
-            <a href="#" data-lang="en" class="lang-option"><span class="lang-flag"></span> <span data-i18n="langNameEn"></span></a>
+            <a href="#" data-lang="en" class="lang-option"><img class="lang-flag" src="assets/flags/en.svg" width="21" height="14" alt="" decoding="async"><span data-i18n="langNameEn"></span></a>
             <div class="menu-divider"></div>
-            <a href="#" data-lang="es" class="lang-option"><span class="lang-flag"></span> <span data-i18n="langNameEs"></span></a>
+            <a href="#" data-lang="es" class="lang-option"><img class="lang-flag" src="assets/flags/es.svg" width="21" height="14" alt="" decoding="async"><span data-i18n="langNameEs"></span></a>
         </div>
     </header>
     <main id="home-main">
-        <section class="panel">
+        <section class="panel sk-view" aria-hidden="true">
+            <div class="panel-header">
+                <span class="panel-title"><span class="sk sk-bar sk-title"></span></span>
+            </div>
+            <div class="panel-body">
+                <div class="launcher-label"><span class="sk sk-bar sk-heading"></span></div>
+                <div class="launcher">
+                    <div class="app-tile"><span class="app-icon sk"></span><span class="sk sk-app-label"></span></div>
+                    <div class="app-tile"><span class="app-icon sk"></span><span class="sk sk-app-label"></span><span class="sk sk-app-status"></span></div>
+                    <div class="app-tile"><span class="app-icon sk"></span><span class="sk sk-app-label"></span></div>
+                </div>
+            </div>
+        </section>
+        <section class="panel view-content">
             <div class="panel-header">
                 <span class="panel-title" data-i18n="panelTitle"></span>
             </div>
@@ -64,7 +77,11 @@
                 </div>
             </div>
         </section>
-        <footer class="log-note">
+        <footer class="log-note sk-view sk-note" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span class="sk-tail"></span>
+            <span class="sk-extra"></span><span class="sk-extra"></span><span class="sk-extra"></span><span class="sk-extra sk-extra-tail"></span>
+        </footer>
+        <footer class="log-note view-content">
             <p><span class="log-tag">[INFO]</span><span data-i18n="footerInfo"></span></p>
         </footer>
     </main>

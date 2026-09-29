@@ -112,9 +112,21 @@ main {
     border-radius: 0;
 }
 
+i.fa-solid,
+i.fa-brands {
+    display: inline-block;
+    min-width: 1em;
+    text-align: center;
+}
+
 .lang-flag {
-    font-size: 14px;
-    line-height: 1;
+    display: inline-block;
+    flex-shrink: 0;
+    width: 21px;
+    height: 14px;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
     filter: grayscale(20%);
 }
 
@@ -599,4 +611,221 @@ html.transition-enter::after {
 html.transition-enter.transition-ready::after {
     opacity: 0;
     transition: opacity 0.22s ease-out;
+}
+
+html.is-loading .view-content {
+    display: none;
+}
+
+html:not(.is-loading) .sk-view {
+    display: none;
+}
+
+.sk-view {
+    opacity: 0;
+    animation: sk-reveal 0.01s linear 0.14s forwards;
+}
+
+.sk-view .port {
+    pointer-events: none;
+}
+
+.sk,
+.sk-lines > span::before,
+.sk-note > span::before,
+html.is-loading .menu-btn [data-i18n],
+html.is-loading .desktop-nav [data-i18n] {
+    background: linear-gradient(90deg, var(--panel-alt) 0%, var(--border) 50%, var(--panel-alt) 100%);
+    background-size: 200% 100%;
+    animation: sk-shimmer 1.4s ease-in-out infinite;
+}
+
+html.is-loading .menu-btn [data-i18n],
+html.is-loading .desktop-nav [data-i18n] {
+    display: inline-block;
+    vertical-align: middle;
+    height: 10px;
+    border-radius: 3px;
+}
+
+html.is-loading .menu-btn [data-i18n] {
+    width: 34px;
+}
+
+html.is-loading .desktop-nav a [data-i18n] {
+    width: 26px;
+}
+
+html.is-loading .desktop-nav .menu-soon [data-i18n] {
+    width: 100px;
+}
+
+.sk-bar {
+    display: inline-block;
+    vertical-align: middle;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.sk-title {
+    width: 150px;
+}
+
+.sk-pfp {
+    width: 108px;
+    height: 108px;
+    clip-path: polygon(14% 0, 100% 0, 100% 86%, 86% 100%, 0 100%, 0 14%);
+}
+
+.sk-view .field {
+    align-items: start;
+}
+
+.sk-dt {
+    display: flex;
+    align-items: center;
+    height: 17px;
+}
+
+.sk-dt .sk-bar {
+    height: 11px;
+}
+
+.sk-lines {
+    font-size: 17.5px;
+    line-height: 1.65;
+}
+
+.sk-lines > span {
+    display: block;
+    position: relative;
+    height: 28.875px;
+}
+
+.sk-lines > span::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: var(--r, 0);
+    top: 7px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+.sk-lines > span.sk-tail {
+    --r: 35%;
+}
+
+.sk-lines > span.sk-extra {
+    display: none;
+}
+
+.sk-port {
+    min-height: 51px;
+}
+
+.sk-port-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+.sk-port-name {
+    width: 96px;
+    height: 14px;
+    margin-right: auto;
+    border-radius: 3px;
+}
+
+.sk-port-status {
+    width: 56px;
+    height: 11px;
+    border-radius: 3px;
+}
+
+.sk-note > span {
+    display: block;
+    position: relative;
+    height: 22.5px;
+}
+
+.sk-note > span::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: var(--r, 0);
+    top: 6px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+.sk-note > span.sk-tail {
+    --r: 40%;
+}
+
+.sk-note > span.sk-extra {
+    display: none;
+}
+
+@media (max-width: 520px) {
+    .sk-pfp {
+        width: 92px;
+        height: 92px;
+    }
+
+    .sk-lines > span.sk-tail {
+        --r: 0;
+    }
+
+    .sk-lines > span.sk-extra {
+        display: block;
+    }
+
+    .sk-lines > span.sk-extra-tail {
+        --r: 35%;
+    }
+
+    .sk-note > span.sk-tail {
+        --r: 0;
+    }
+
+    .sk-note > span.sk-extra {
+        display: block;
+    }
+
+    .sk-note > span.sk-extra-tail {
+        --r: 40%;
+    }
+}
+
+@keyframes sk-reveal {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes sk-shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sk,
+    .sk-lines > span::before,
+    .sk-note > span::before,
+    html.is-loading .menu-btn [data-i18n],
+    html.is-loading .desktop-nav [data-i18n] {
+        animation: none;
+    }
+
+    .sk-view {
+        animation: none;
+        opacity: 1;
+    }
 }

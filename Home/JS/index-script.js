@@ -5,15 +5,21 @@ const TRANSITION_PARAM = "transition";
 const SUPPORTED_LANGS = ["it", "en", "es"];
 const DEFAULT_LANG = "it";
 const LANG_STORAGE_KEY = "site-lang";
+const LANG_CODES = { it: "IT", en: "EN", es: "ES" };
 const OPEN_MS = 560;
 
+const root = document.documentElement;
 const langBtn = document.getElementById("lang-btn");
 const langDropdown = document.getElementById("lang-dropdown");
 const langChevron = document.getElementById("lang-chevron");
+const langFlagCurrent = document.getElementById("lang-flag-current");
+const langCodeCurrent = document.getElementById("lang-code-current");
 const transition = document.getElementById("page-transition");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
 let currentLang = DEFAULT_LANG;
 let navigationBusy = false;
+let languageRequest = 0;
 
 function getQueryValue(name) {
     return new URL(window.location.href).searchParams.get(name);
@@ -22,25 +28,32 @@ function getQueryValue(name) {
 function detectInitialLang() {
     const pathLang = window.location.pathname.split("/").filter(Boolean)[0];
     if (SUPPORTED_LANGS.includes(pathLang)) return pathLang;
+
     try {
         const saved = localStorage.getItem(LANG_STORAGE_KEY);
         if (SUPPORTED_LANGS.includes(saved)) return saved;
     } catch {}
+
     return DEFAULT_LANG;
+}
+
+function renderLangButton(lang) {
+    langFlagCurrent.src = `assets/flags/${lang}.svg`;
+    langCodeCurrent.textContent = LANG_CODES[lang];
 }
 
 async function loadLanguage(lang) {
     const requested = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
     const response = await fetch(`lang/${requested}.json`, { cache: "no-store" });
+
     if (!response.ok) throw new Error(`Language file unavailable: ${requested}`);
+
     return response.json();
 }
 
 function applyTranslations(dict, lang) {
     document.documentElement.lang = dict.htmlLang || lang;
     document.getElementById("meta-description").content = dict.metaDescription;
-    document.getElementById("lang-flag-current").textContent = dict.langFlag;
-    document.getElementById("lang-code-current").textContent = dict.langCode;
 
     document.querySelectorAll("[data-i18n]").forEach((element) => {
         const key = element.dataset.i18n;
@@ -50,6 +63,7 @@ function applyTranslations(dict, lang) {
     document.querySelectorAll("[data-i18n-attr]").forEach((element) => {
         element.dataset.i18nAttr.split(",").forEach((pair) => {
             const [attribute, key] = pair.split(":").map((value) => value.trim());
+
             if (attribute && dict[key] !== undefined) {
                 element.setAttribute(attribute, dict[key]);
             }
@@ -63,9 +77,13 @@ function applyTranslations(dict, lang) {
 
 async function setLanguage(lang, updateUrl = true) {
     const requested = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+    const requestId = ++languageRequest;
     const dict = await loadLanguage(requested);
 
+    if (requestId !== languageRequest) return;
+
     currentLang = requested;
+    renderLangButton(requested);
     applyTranslations(dict, requested);
 
     try {
@@ -84,6 +102,20 @@ function closeLanguageMenu() {
     langChevron.classList.remove("open");
 }
 
+function resetTransitionState() {
+    transition.getAnimations().forEach((animation) => animation.cancel());
+    transition.style.clipPath = "";
+    transition.hidden = true;
+    root.classList.remove("transition-enter", "transition-ready");
+    navigationBusy = false;
+    closeLanguageMenu();
+}
+
+function syncFromHistory() {
+    resetTransitionState();
+    setLanguage(detectInitialLang(), false).catch(() => {});
+}
+
 langBtn.addEventListener("click", (event) => {
     event.stopPropagation();
     const open = langDropdown.classList.toggle("active");
@@ -96,7 +128,11 @@ document.querySelectorAll(".lang-option").forEach((option) => {
     option.addEventListener("click", async (event) => {
         event.preventDefault();
         event.stopPropagation();
-        await setLanguage(option.dataset.lang);
+
+        try {
+            await setLanguage(option.dataset.lang);
+        } catch {}
+
         closeLanguageMenu();
     });
 });
@@ -138,7 +174,7 @@ function buildTarget(baseUrl, transitionName) {
     return target.href;
 }
 
-async function navigateToBio(tile) {
+function navigateToBio(tile) {
     if (navigationBusy) return;
 
     const icon = tile.querySelector(".app-icon");
@@ -172,11 +208,11 @@ async function navigateToBio(tile) {
                 easing: "cubic-bezier(0.32, 0.72, 0, 1)",
                 fill: "forwards"
             }
-        ).finished.then(() => window.location.assign(target));
+        ).finished.then(() => window.location.assign(target)).catch(() => {});
     });
 }
 
-document.querySelectorAll(".app-tile").forEach((tile) => {
+document.querySelectorAll(".app-tile[data-app]").forEach((tile) => {
     tile.addEventListener("pointerenter", () => {
         if (tile.dataset.app === "bio") {
             prefetch(buildTarget(BIO_URL, "home-to-bio"));
@@ -197,6 +233,7 @@ document.querySelectorAll(".app-tile").forEach((tile) => {
 
         if (tile.dataset.app === "projects") {
             window.location.assign(PROJECTS_URL);
+            return;
         }
 
         if (tile.dataset.app === "soon") {
@@ -225,24 +262,46 @@ function finishReturnTransition() {
     url.searchParams.delete(TRANSITION_PARAM);
     window.history.replaceState({}, "", url);
 
-    document.documentElement.classList.add("transition-enter");
+    root.classList.add("transition-enter");
+
+    if (reduceMotion.matches) {
+        root.classList.remove("transition-enter");
+        return;
+    }
 
     requestAnimationFrame(() => {
-        document.documentElement.classList.add("transition-ready");
+        root.classList.add("transition-ready");
 
         window.setTimeout(() => {
-            document.documentElement.classList.remove(
-                "transition-enter",
-                "transition-ready"
-            );
+            root.classList.remove("transition-enter", "transition-ready");
         }, 240);
     });
 }
 
-(async () => {
-    try {
-        await setLanguage(detectInitialLang());
-    } catch {}
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) syncFromHistory();
+});
 
-    finishReturnTransition();
-})();
+window.addEventListener("popstate", syncFromHistory);
+
+async function init() {
+    const lang = detectInitialLang();
+
+    currentLang = lang;
+    renderLangButton(lang);
+
+    try {
+        await setLanguage(lang);
+    } catch {
+        if (lang !== DEFAULT_LANG) {
+            try {
+                await setLanguage(DEFAULT_LANG);
+            } catch {}
+        }
+    } finally {
+        root.classList.remove("is-loading");
+        finishReturnTransition();
+    }
+}
+
+init();
