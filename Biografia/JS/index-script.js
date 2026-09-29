@@ -42,7 +42,7 @@ function renderLangButton(lang) {
 
 async function loadLanguage(lang) {
     const requested = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
-    const response = await fetch(`lang/${requested}.json`, { cache: "no-store" });
+    const response = await fetch(`assets/lang/${requested}.json`, { cache: "no-store" });
 
     if (!response.ok) {
         throw new Error(`Language file unavailable: ${requested}`);
@@ -250,6 +250,7 @@ window.addEventListener("pageshow", (event) => {
 window.addEventListener("popstate", syncFromHistory);
 
 async function init() {
+    const loadingStartedAt = performance.now();
     const lang = detectInitialLang();
 
     currentLang = lang;
@@ -265,6 +266,8 @@ async function init() {
             } catch {}
         }
     } finally {
+        const remaining = Math.max(0, 650 - (performance.now() - loadingStartedAt));
+        await new Promise((resolve) => window.setTimeout(resolve, remaining));
         root.classList.remove("is-loading");
     }
 }
