@@ -1,7 +1,6 @@
 const HOME_URL = "https://mathiasggxmitic.it/";
 const BIO_URL = "https://bio.mathiasggxmitic.it/";
 const PROJECTS_URL = "https://projects.mathiasggxmitic.it/";
-const TRANSITION_PARAM = "transition";
 const SUPPORTED_LANGS = ["it", "en", "es"];
 const DEFAULT_LANG = "it";
 const LANG_STORAGE_KEY = "site-lang";
@@ -20,10 +19,6 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let currentLang = DEFAULT_LANG;
 let navigationBusy = false;
 let languageRequest = 0;
-
-function getQueryValue(name) {
-    return new URL(window.location.href).searchParams.get(name);
-}
 
 function detectInitialLang() {
     const pathLang = window.location.pathname.split("/").filter(Boolean)[0];
@@ -167,10 +162,9 @@ function prefetch(url) {
     document.head.appendChild(link);
 }
 
-function buildTarget(baseUrl, transitionName) {
+function buildTarget(baseUrl) {
     const target = new URL(baseUrl);
     target.pathname = `/${currentLang}`;
-    target.searchParams.set(TRANSITION_PARAM, transitionName);
     return target.href;
 }
 
@@ -183,7 +177,7 @@ function navigateToBio(tile) {
     navigationBusy = true;
     closeLanguageMenu();
 
-    const target = buildTarget(BIO_URL, "home-to-bio");
+    const target = buildTarget(BIO_URL);
     prefetch(target);
 
     if (reduceMotion.matches) {
@@ -215,13 +209,13 @@ function navigateToBio(tile) {
 document.querySelectorAll(".app-tile[data-app]").forEach((tile) => {
     tile.addEventListener("pointerenter", () => {
         if (tile.dataset.app === "bio") {
-            prefetch(buildTarget(BIO_URL, "home-to-bio"));
+            prefetch(buildTarget(BIO_URL));
         }
     });
 
     tile.addEventListener("focus", () => {
         if (tile.dataset.app === "bio") {
-            prefetch(buildTarget(BIO_URL, "home-to-bio"));
+            prefetch(buildTarget(BIO_URL));
         }
     });
 
@@ -256,13 +250,7 @@ document.querySelectorAll(".app-tile[data-app]").forEach((tile) => {
 });
 
 function finishReturnTransition() {
-    if (getQueryValue(TRANSITION_PARAM) !== "bio-to-home") return;
-
-    const url = new URL(window.location.href);
-    url.searchParams.delete(TRANSITION_PARAM);
-    window.history.replaceState({}, "", url);
-
-    root.classList.add("transition-enter");
+    if (!root.classList.contains("from-transition")) return;
 
     if (reduceMotion.matches) {
         root.classList.remove("transition-enter");
@@ -289,6 +277,7 @@ async function init() {
 
     currentLang = lang;
     renderLangButton(lang);
+    finishReturnTransition();
 
     try {
         await setLanguage(lang);
@@ -300,7 +289,6 @@ async function init() {
         }
     } finally {
         root.classList.remove("is-loading");
-        finishReturnTransition();
     }
 }
 

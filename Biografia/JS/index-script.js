@@ -1,5 +1,4 @@
 const HOME_URL = "https://mathiasggxmitic.it/";
-const TRANSITION_PARAM = "transition";
 const SUPPORTED_LANGS = ["it", "en", "es"];
 const DEFAULT_LANG = "it";
 const LANG_STORAGE_KEY = "site-lang";
@@ -22,10 +21,6 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let navigationBusy = false;
 let currentLang = DEFAULT_LANG;
 let languageRequest = 0;
-
-function getQueryValue(name) {
-    return new URL(window.location.href).searchParams.get(name);
-}
 
 function detectInitialLang() {
     const pathLang = window.location.pathname.split("/").filter(Boolean)[0];
@@ -196,7 +191,6 @@ function closeBio() {
 
     const target = new URL(HOME_URL);
     target.pathname = `/${currentLang}`;
-    target.searchParams.set(TRANSITION_PARAM, "bio-to-home");
 
     prefetch(target.href);
 
@@ -233,13 +227,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 function finishOpenTransition() {
-    if (getQueryValue(TRANSITION_PARAM) !== "home-to-bio") return;
-
-    const url = new URL(window.location.href);
-    url.searchParams.delete(TRANSITION_PARAM);
-    window.history.replaceState({}, "", url);
-
-    root.classList.add("transition-enter");
+    if (!root.classList.contains("from-transition")) return;
 
     if (reduceMotion.matches) {
         root.classList.remove("transition-enter");
@@ -266,6 +254,7 @@ async function init() {
 
     currentLang = lang;
     renderLangButton(lang);
+    finishOpenTransition();
 
     try {
         await setLanguage(lang);
@@ -277,7 +266,6 @@ async function init() {
         }
     } finally {
         root.classList.remove("is-loading");
-        finishOpenTransition();
     }
 }
 

@@ -444,6 +444,11 @@ html:not(.is-loading) .sk-view {
     animation: sk-reveal 0.01s linear 0.14s forwards;
 }
 
+html.from-transition .sk-view {
+    animation: none;
+    opacity: 1;
+}
+
 .sk-view .app-tile {
     pointer-events: none;
 }

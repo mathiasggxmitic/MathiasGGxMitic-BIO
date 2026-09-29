@@ -1,16 +1,15 @@
 {
   "rewrites": [
+    { "source": "/it", "destination": "/" },
+    { "source": "/en", "destination": "/" },
+    { "source": "/es", "destination": "/" }
+  ],
+  "headers": [
     {
-      "source": "/it",
-      "destination": "/"
-    },
-    {
-      "source": "/en",
-      "destination": "/"
-    },
-    {
-      "source": "/es",
-      "destination": "/"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
   ]
 }

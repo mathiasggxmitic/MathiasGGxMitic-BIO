@@ -16,8 +16,11 @@
     <noscript><style>.sk-view{display:none!important}html.is-loading .view-content{display:block}</style></noscript>
     <script>
         (() => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get("transition") === "bio-to-home") document.documentElement.classList.add("transition-enter");
+            const nav = performance.getEntriesByType("navigation")[0];
+            if (!nav || nav.type !== "navigate" || !document.referrer) return;
+            let origin = "";
+            try { origin = new URL(document.referrer).origin; } catch (e) {}
+            if (origin === "https://bio.mathiasggxmitic.it") document.documentElement.classList.add("transition-enter", "from-transition");
         })();
     </script>
 </head>
